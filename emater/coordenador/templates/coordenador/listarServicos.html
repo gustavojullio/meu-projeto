@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Serviços Importados{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Serviços Importados da API</h2>
+
+    {% if servicos %}
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Data</th>
+                        <th>Descrição</th>
+                        <th>Produtor</th>
+                        <th>Trabalhadores</th>
+                        <th>Produtos</th>
+                        <th>Serviços</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for servico in servicos %}
+                        <tr>
+                            <td>{{ servico.data|date:"d/m/Y" }}</td>
+                            <td>{{ servico.descricao }}</td>
+                            <td>{{ servico.produtor_nome }}</td>
+                            <td>
+                                {% for t in servico.trabalhadores %}
+                                    <span class="badge bg-secondary">{{ t }}</span>
+                                {% empty %}
+                                    <span class="text-muted">–</span>
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {% for p in servico.produtos %}
+                                    <span class="badge bg-info text-dark">{{ p }}</span>
+                                {% empty %}
+                                    <span class="text-muted">–</span>
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {% for s in servico.servicos %}
+                                    <span class="badge bg-success">{{ s }}</span>
+                                {% empty %}
+                                    <span class="text-muted">–</span>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="text-muted">Nenhum serviço encontrado.</p>
+    {% endif %}
+</div>
+{% endblock %}

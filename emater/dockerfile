@@ -1,0 +1,21 @@
+FROM python:3.10-slim
+
+ENV PYTHONUNBUFFERED=1
+
+# Define o diretório de trabalho como a raiz do projeto (onde está manage.py)
+WORKDIR /app
+
+# Instala pacotes do sistema para o mysqlclient
+RUN apt-get update && \
+    apt-get install -y gcc default-libmysqlclient-dev pkg-config && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Copia dependências e instala
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copia todo o projeto para dentro do container
+COPY . .
+
+EXPOSE 8000

@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  app:  # Node.js
+    build: ./projeto-agricola
+    container_name: nodeapp
+    ports:
+      - "3000:3000"
+    environment:
+      MONGO_URL: mongodb://admin:senha123@mongodb:27017/agricola?authSource=admin
+    depends_on:
+      - mongodb
+      - web
+    networks:
+      - my-network
+
+  mongodb:
+    image: mongo:5.0
+    container_name: mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: senha123
+    ports:
+      - "27277:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - my-network
+
+  db:  # MySQL do Django
+    image: mysql:8.0
+    container_name: mysql-db
+    restart: always
+    environment:
+      MYSQL_DATABASE: emater
+      MYSQL_ROOT_PASSWORD: 12345678
+    ports:
+      - "3310:3306"
+    volumes:
+      - mysql-volume:/var/lib/mysql
+    networks:
+      - my-network
+
+  web:  # Django
+    build:
+      context: ./emater
+      dockerfile: Dockerfile
+    container_name: django-web
+    command: python manage.py runserver 0.0.0.0:8000
+    working_dir: /app
+    volumes:
+      - ./emater:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    networks:
+      - my-network
+
+volumes:
+  mongo-data:
+  mysql-volume:
+
+networks:
+  my-network:
+    driver: bridge

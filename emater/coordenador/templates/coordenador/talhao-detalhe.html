@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Detalhes do Terreno - EMATER{% endblock %}
+
+{% block content %}
+<div class="container my-3 px-2">
+    
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-success text-white text-center">
+            <h4 class="mb-0">👤 {{ talhao.terreno.nome }}</h4>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-12 col-md-6">
+                    <label class="form-label fw-bold">Talhão</label>
+                    <div class="form-control bg-light">{{ talhao.nome }}</div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label fw-bold">Cidade</label>
+                    <div class="form-control bg-light">{{ talhao.cidade }}</div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label fw-bold">Data de Certificação</label>
+                    <div class="form-control bg-light">{{ talhao.data_certificacao }}</div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label fw-bold">Número de Plantas</label>
+                    <div class="form-control bg-light">{{ talhao.numero_plantas }}</div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label fw-bold">Data de Plantio</label>
+                    <div class="form-control bg-light">{{ talhao.data_plantio }}</div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label fw-bold">Variedade</label>
+                    <div class="form-control bg-light">{{ talhao.variedade }}</div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label fw-bold">Área</label>
+                    <div class="form-control bg-light">{{ talhao.area }}</div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label fw-bold">Validade da CAF</label>
+                    <div class="form-control bg-light">{{ talhao.validade_caf }}</div>
+                </div>
+<div class="d-flex justify-content-between flex-wrap mt-4 gap-2">
+    <a 
+    href="{% url 'coordenador:talhao_exclui' talhao.id %}" 
+    class="btn btn-danger" 
+    onclick="return confirm('Tem certeza que deseja excluir este talhão?');">
+    🗑️ Excluir talhão</a>
+    
+    <a href="{% url 'coordenador:talhao_atualiza' talhao.id %}" class="btn btn-success">
+        ✏️ Atualizar Talhão
+    </a>
+    <a href="{% url 'coordenador:terreno_detalhe' talhao.terreno.id %}" class="btn btn-secondary">🔙 Voltar</a>
+</div>
+                {% endblock %}

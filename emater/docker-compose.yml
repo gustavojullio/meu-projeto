@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: my-mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: emater
+      MYSQL_ROOT_PASSWORD: 12345678
+    ports:
+      - "3310:3306"
+    volumes:
+      - mysql-volume:/var/lib/mysql
+    networks:
+      - my-network # Usa a mesma rede interna
+
+  web:
+    build:
+      context: .
+      dockerfile: dockerfile
+    command: python manage.py runserver 0.0.0.0:8000
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    networks:
+      - my-network # Usa a mesma rede interna
+
+volumes:
+  mysql-volume:
+
+networks:
+  my-network:
+    driver: bridge # O Docker vai criar e gerenciar essa rede

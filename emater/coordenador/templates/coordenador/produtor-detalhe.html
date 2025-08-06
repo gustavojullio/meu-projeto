@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Detalhes do Produtor - EMATER{% endblock %}
+
+{% block content %}
+<div class="container my-3 px-2">
+
+    {% if produtor %}
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-success text-white text-center">
+            <h4 class="mb-0">👤 {{ produtor.user.username }}</h4>
+        </div>
+
+        <div class="card-body">
+            <div class="row g-3">
+
+                <div class="col-12 col-md-6">
+                    <label class="form-label fw-bold">👤 Nome completo</label>
+                    <div class="form-control bg-light">{{ produtor.user.first_name }}  {{ produtor.user.last_name }}</div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label fw-bold">📞 Telefone</label>
+                    <div class="form-control bg-light">{{ produtor.telefone }}</div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label fw-bold">📧 E-mail</label>
+                    <div class="form-control bg-light">{{ produtor.user.email }}</div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label fw-bold">🆔 CPF</label>
+                    <div class="form-control bg-light">{{ produtor.cpf }}</div>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="form-label fw-bold">🏙️ Cidade</label>
+                    <div class="form-control bg-light">{{ produtor.cidade }}</div>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label class="form-label fw-bold">📄 CAF</label>
+                    <div class="form-control bg-light">{{ produtor.caf }}</div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label fw-bold">🗓️ Validade do CAF</label>
+                    <div class="form-control bg-light">{{ produtor.validade_caf }}</div>
+                </div>
+{% if terrenos %}
+<div class="mt-4">
+    <h5 class="text-success">🌱 Lista de Terrenos</h5>
+    <ul class="list-group">
+{% for terreno in terrenos %}
+    <li class="list-group-item"><a href="{% url 'coordenador:terreno_detalhe' terreno.id %}">{{ terreno.nome }}</li>
+{% endfor %}
+{% else %}
+<div class="mt-4">
+    <h5 class="text-success">🌱 Nenhum Terreno cadastrado.</h5>
+</div>
+    </ul>
+
+</div>
+{% endif %}
+    <div class="mt-3 text-end">
+        <a href="{% url 'coordenador:terreno_cria' produtor.id %}" class="btn btn-outline-success">➕ Cadastrar Terreno</a>
+    </div>
+<div class="d-flex justify-content-between flex-wrap mt-4 gap-2">
+    <a href="{% url 'coordenador:produtor_atualiza' produtor.id %}" class="btn btn-success">✏️ Atualizar Produtor</a>
+    <a href="{% url 'coordenador:produtor_exclui' produtor.id %}" class="btn btn-danger"
+        onclick="return confirm('Tem certeza que deseja excluir este produtor?');">🗑️ Excluir Produtor</a>
+    <a href="{% url 'coordenador:servicos-produtor' produtor.user.email %}" class="btn btn-outline-success">Servicos por produtor</a>
+    <a href="{% url 'coordenador:Lista_Produtores' %}" class="btn btn-secondary">🔙 Voltar</a>
+</div>
+
+    {% else %}
+    <div class="alert alert-warning text-center mt-4">
+        Nenhum produtor selecionado.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

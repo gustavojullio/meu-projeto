@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Serviços do Produtor{% endblock %}
+
+{% block content %}
+<h2 class="mt-4">Serviços para o produtor: <strong>{{ email }}</strong></h2>
+
+{% if servicos %}
+  {% for servico in servicos %}
+    <div class="card mt-4">
+      <div class="card-body">
+        <h5 class="card-title">Talhão: {{ servico.talhao|default:"-" }}</h5>
+        <p class="card-text">
+          <strong>Data:</strong>
+          {{ servico.data|date:"d/m/Y H:i" }}<br>
+
+          <strong>Valor Total:</strong>
+          R$ {{ servico.valor_servico|default:"0,00" }}<br>
+
+          <strong>Serviços executados:</strong>
+          <ul>
+            {% for tipo in servico.servico_tipo %}
+              <li>{{ tipo|capfirst }}</li>
+            {% endfor %}
+          </ul>
+
+          <strong>Produtos:</strong>
+          <ul>
+            {% for p in servico.produtos %}
+              <li>
+                <strong>{{ p.nome }}</strong> —
+                Qtd: {{ p.qtde }} {{ p.unidade }},
+                Valor: {{ p.valor }}
+              </li>
+            {% endfor %}
+          </ul>
+
+          <strong>Trabalhadores:</strong>
+          <ul>
+            {% for t in servico.trabalhadores %}
+              <li>{{ t.nome }}</li>
+            {% endfor %}
+          </ul>
+        </p>
+      </div>
+    </div>
+  {% endfor %}
+{% else %}
+  <div class="alert alert-warning mt-4">Nenhum serviço encontrado para este produtor.</div>
+{% endif %}
+{% endblock %}
