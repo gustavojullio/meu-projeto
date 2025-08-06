@@ -1,0 +1,1036 @@
+/* -------------------
+ * Reset e Variáveis Globais
+ * ------------------- */
+
+/* Definindo as cores do seu guia de marca para fácil acesso */
+:root {
+    --cor-verde-claro-bg: #f0f4f0;
+    /* Um verde bem claro para o fundo */
+    --cor-verde-escuro-emater: #384d1a;
+    /* Verde escuro do logo */
+    --cor-texto-principal: #333;
+    --cor-branca: #ffffff;
+}
+
+/* Reset básico para garantir consistência entre navegadores */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--cor-verde-claro-bg);
+    color: var(--cor-texto-principal);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* -------------------
+ * Estilos do Container Principal
+ * ------------------- */
+.container {
+    width: 100%;
+    max-width: 400px;
+    /* Limita a largura em telas grandes */
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.welcome-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    /* Ocupa a altura total da tela */
+    text-align: center;
+}
+
+/* -------------------
+ * Estilos dos Elementos
+ * ------------------- */
+
+.welcome-logo {
+    max-width: 200px;
+    /* Define um tamanho máximo para o logo */
+    width: 100%;
+    margin-bottom: 100px;
+    /* Espaço entre o logo e o botão */
+}
+
+.welcome-logo-icon {
+    max-width: 200px;
+    /* Define um tamanho máximo para o logo */
+    width: 100%;
+}
+
+.btn {
+    display: inline-block;
+    padding: 15px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    border: none;
+}
+
+.btn-primary {
+    background-color: var(--cor-verde-escuro-emater);
+    color: var(--cor-branca);
+}
+
+.btn-primary:hover {
+    /* Efeito para quando o mouse passa por cima (em desktops) */
+    background-color: #4a6822;
+    /* Um pouco mais claro que o verde principal */
+    transform: translateY(-2px);
+}
+
+
+/* -------------------
+ * Estilos da Tela de Login
+ * ------------------- */
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    /* Garante que ocupe a tela toda */
+    text-align: center;
+}
+
+.login-logo {
+    max-width: 350px;
+    width: 100%;
+    margin-bottom: 40px;
+    /* Espaço entre o logo e o título */
+}
+
+.form-title {
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--cor-texto-principal);
+    margin-bottom: 30px;
+}
+
+.login-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-input {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--cor-branca);
+}
+
+.form-input::placeholder {
+    color: #999;
+}
+
+.btn-full-width {
+    width: 100%;
+    margin-top: 10px;
+    /* Espaço acima do botão */
+}
+
+.forgot-password-link {
+    margin-top: 20px;
+    color: var(--cor-texto-principal);
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.forgot-password-link:hover {
+    text-decoration: underline;
+}
+
+/* -------------------
+ * Estilos Globais do App
+ * ------------------- */
+body {
+    padding-bottom: 80px;
+    /* Espaço para o menu de navegação fixo */
+}
+
+.container.with-header {
+    padding-top: 80px;
+    /* Espaço para o header fixo */
+}
+
+.container.with-header-and-footer {
+    padding-top: 80px;
+    /* Espaço para o header */
+    padding-bottom: 90px;
+    /* Espaço para a navegação */
+}
+
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: var(--cor-branca);
+    border-bottom: 1px solid #eee;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+}
+
+.header-logo {
+    height: 40px;
+}
+
+.icon-button {
+    font-size: 28px;
+    color: var(--cor-texto-principal);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.icon-button .material-symbols-outlined {
+    vertical-align: middle;
+}
+
+
+/* -------------------
+ * Estilos da Lista de Serviços (servicos.html)
+ * ------------------- */
+
+.service-list {
+    width: 100%;
+}
+
+.service-list a.service-card { /* Target the <a> tag with the .service-card class */
+    background-color: var(--cor-branca);
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    text-decoration: none; /* Removes the default underline from links */
+    color: inherit; /* Ensures the text color is inherited, not the default link blue */
+    display: block; /* Make the <a> tag behave like a block-level element */
+}
+
+.service-card h3 {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.service-card p {
+    font-size: 14px;
+    color: #666;
+}
+
+.fab {
+    position: fixed;
+    bottom: 95px;
+    /* Posição acima do menu de navegação */
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    background-color: var(--cor-verde-escuro-emater);
+    /* Cor do botão principal */
+    color: var(--cor-branca);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    z-index: 10;
+}
+
+.fab .material-symbols-outlined {
+    font-size: 32px;
+}
+
+.bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: var(--cor-branca);
+    border-top: 1px solid #eee;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 5px 0;
+    z-index: 10;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #888;
+    padding: 5px 10px;
+}
+
+.nav-item .nav-label {
+    font-size: 12px;
+    margin-top: 2px;
+}
+
+.nav-item.active {
+    color: var(--cor-verde-escuro-emater);
+    /* Cor para o item ativo */
+}
+
+/* -------------------
+ * Estilos do Formulário (adicionar-servico.html)
+ * ------------------- */
+.add-service-form {
+    width: 100%;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 8px;
+    text-align: left;
+}
+
+/* Estilo para setas de select */
+select.form-input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23333' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 16px;
+}
+
+.input-stepper {
+    display: flex;
+    align-items: stretch;
+    /* Garante que todos os itens tenham a mesma altura */
+}
+
+.stepper-input {
+    text-align: center;
+    border-left: none;
+    border-right: none;
+    border-radius: 0;
+    /* Remove as bordas arredondadas do input */
+    flex-grow: 1;
+    /* Faz o input preencher o espaço disponível */
+    z-index: 1;
+}
+
+.stepper-input:focus {
+    z-index: 2;
+}
+
+.stepper-btn {
+    border: 1px solid #ccc;
+    background-color: #f5f5f5;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 0 15px;
+    /* Ajustado para corresponder à altura do input */
+    height: 50px;
+    /* Garante a mesma altura que o input, que tem padding de 15px e borda de 1px */
+    cursor: pointer;
+    z-index: 1;
+}
+
+.stepper-btn:first-child {
+    border-radius: 8px 0 0 8px;
+}
+
+.stepper-btn:last-child {
+    border-radius: 0 8px 8px 0;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+    gap: 15px;
+}
+
+.form-actions .btn {
+    flex: 1;
+    /* Faz os botões ocuparem o mesmo espaço */
+}
+
+.btn-secondary {
+    background-color: #ccc;
+    color: var(--cor-texto-principal);
+}
+
+/* -------------------
+ * Estilos de Formulário (Adicionais)
+ * ------------------- */
+
+.form-divider {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 30px 0;
+}
+
+/* MUDANÇA: Estilos para o botão de alternância do filtro */
+.filter-toggle {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 12px 16px;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.filter-toggle .material-symbols-outlined {
+    margin-right: 10px;
+    transition: transform 0.3s ease;
+}
+
+.filter-toggle.open .material-symbols-outlined {
+    transform: rotate(180deg);
+}
+
+/* MUDANÇA: Estilos para esconder/mostrar a seção de filtro com transição */
+.filter-section {
+    background-color: #f8f9fa;
+    padding: 16px;
+    border: 1px solid #dee2e6;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    margin-top: -21px;
+    margin-bottom: 20px;
+    /* Compensa a margem do botão */
+    overflow: hidden;
+    transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    max-height: 1000px;
+    /* Altura suficiente para o conteúdo */
+    opacity: 1;
+}
+
+.filter-section.hidden {
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    opacity: 0;
+    border: none;
+}
+
+/* Estilos existentes do seu filtro */
+.filter-form .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-group label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #495057;
+    margin-bottom: 6px;
+    margin-top: 10px;
+}
+
+.input-with-icon {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 0 8px;
+    margin-bottom: 5px;
+}
+
+.input-with-icon .material-symbols-outlined {
+    color: #6c757d;
+    font-size: 20px;
+}
+
+
+.input-with-icon input,
+.input-with-icon select {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 10px 8px;
+    font-size: 16px;
+}
+
+.filter-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 16px;
+    margin-bottom: 20px;
+}
+
+.multiselect-container {
+    position: relative;
+}
+
+.select-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: var(--cor-branca);
+    cursor: pointer;
+}
+
+.select-box span.placeholder {
+    color: #999;
+}
+
+.checkboxes-container {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    border: 1px solid #ccc;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    background-color: var(--cor-branca);
+    z-index: 20;
+    max-height: 240px;
+    /* Aumentado para dar espaço para a busca */
+    overflow-y: auto;
+}
+
+.checkboxes-container label {
+    display: block;
+    padding: 12px 15px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-weight: normal;
+}
+
+.checkboxes-container label:hover {
+    background-color: var(--cor-verde-claro-bg);
+}
+
+.checkboxes-container input[type="checkbox"] {
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+.checkboxes-container.show {
+    display: block;
+}
+
+/* NOVOS ESTILOS PARA A BARRA DE PESQUISA */
+.multiselect-search-wrapper {
+    padding: 8px 12px;
+    border-bottom: 1px solid #eee;
+    position: sticky;
+    top: 0;
+    background-color: var(--cor-branca);
+}
+
+.multiselect-search {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+}
+
+.multiselect-search:focus {
+    border-color: var(--cor-verde-escuro-emater);
+}
+
+/* --- ESTILOS PARA CAMPOS REPETÍVEIS (PRODUTOS E TRABALHADORES) --- */
+
+/* Container para a lista de itens (ex: lista de produtos) */
+.repeatable-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Espaço entre cada item adicionado */
+}
+
+/* Wrapper para cada item individual na lista */
+.repeatable-item {
+  position: relative;
+  background-color: #f8f9fa; /* Um fundo levemente diferente para destacar */
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 20px;
+  padding-top: 15px;
+}
+
+/* Agrupa o cabeçalho do item (título e botão de remover) */
+.repeatable-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.repeatable-item-title {
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--cor-texto-principal);
+}
+
+/* Botão de remover (-) em cada item */
+.remove-item-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background-color: #e6e6e6;
+  color: var(--cor-texto-principal);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.remove-item-btn:hover {
+  background-color: #d4d4d4;
+}
+
+/* Oculta o botão de remover no primeiro item para evitar que o usuário apague todos */
+.repeatable-list .repeatable-item:first-child .remove-item-btn {
+  display: none;
+}
+
+/* Botão para adicionar um novo item (+ Adicionar) */
+.add-item-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  background-color: transparent;
+  color: var(--cor-verde-escuro-emater);
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-item-btn .material-symbols-outlined {
+  margin-right: 8px;
+  font-size: 22px;
+}
+
+.add-item-btn:hover {
+  background-color: var(--cor-verde-claro-bg);
+  border-color: var(--cor-verde-escuro-emater);
+}
+
+/* --- ESTILOS PARA A TELA DE DETALHES DO SERVIÇO (Estilo Card Único) --- */
+
+/* Título principal da página de detalhes */
+main > h2 {
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--cor-texto-principal);
+  margin-bottom: 16px;
+}
+
+/* Novo container para agrupar todos os detalhes em um único card */
+.details-card {
+  background-color: var(--cor-branca);
+  padding: 16px;
+  border-radius: 8px;
+}
+
+/* Seções de detalhe agora são apenas divisões de conteúdo dentro do card */
+.details-card .detail-section {
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0; /* Linha separadora sutil */
+}
+
+/* Remove a borda e o padding inferior da última seção */
+.details-card .detail-section:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+/* Ajusta o padding da primeira seção para alinhar com o card */
+.details-card .detail-section:first-child {
+  padding-top: 0;
+}
+
+/* Rótulo da informação (H3) */
+.detail-section h3 {
+  font-size: 15px;
+  font-weight: 400;
+  color: #000000;
+  margin-bottom: 4px;
+}
+
+/* Valor da informação (P) */
+.detail-section p {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* Estilos para as listas dentro dos cards */
+.detail-section .repeatable-list {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 8px;
+  color: #413e3e;
+}
+
+.detail-section .repeatable-item {
+  background-color: transparent;
+  border: none;
+  padding: 8px 0;
+}
+
+.detail-section .repeatable-item:last-child {
+  padding-bottom: 0;
+}
+
+.detail-section .repeatable-item-title {
+  font-size: 16px;
+  color: var(--cor-texto-principal);
+}
+
+/*
+    Estilos dos botões excluir e editar
+*/
+.action-buttons {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    z-index: 100;
+}
+
+.btn-editar,
+.btn-excluir {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.btn-editar {
+    background-color: #FFEB3B;
+    color: #000000;
+}
+
+.btn-editar:hover {
+    background-color: #FBC02D;
+    transform: translateY(-2px);
+    color: var(--cor-branca);
+}
+
+.btn-excluir {
+    background-color: #F44336;
+    color: #000000;
+}
+
+.btn-excluir:hover {
+    background-color: #D32F2F;
+    transform: translateY(-2px);
+    color: var(--cor-branca);
+}
+
+/* Estilo para o Card de Edição */
+.edit-card {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.edit-section {
+    margin-bottom: 16px;
+}
+
+.edit-section label {
+    font-weight: 500;
+    font-size: 16px;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.edit-section input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.edit-section input[type="date"] {
+    width: auto;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn-salvar,
+.btn-cancelar {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-salvar {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.btn-salvar:hover {
+    background-color: #45a049;
+}
+
+.btn-cancelar {
+    background-color: #f44336;
+    color: white;
+}
+
+.btn-cancelar:hover {
+    background-color: #d32f2f;
+}
+
+/* --- NOVOS ESTILOS --- */
+/* Estilo para o container de um serviço individual quando há múltiplos */
+.servico-item {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+/* A linha divisória entre os serviços */
+#servicos-container > .form-divider {
+  margin: 25px 0;
+  border-top: 1px solid #dee2e6;
+}
+
+/* Botão para adicionar um novo serviço */
+#add-servico-btn {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border-style: solid;
+  font-weight: bold;
+}
+
+#add-servico-btn .material-symbols-outlined {
+    font-weight: bold;
+}
+
+/* --- ESTILOS PARA O BLOCO DE SERVIÇO (Adicionados) --- */
+.servico-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 10px;
+}
+
+.servico-item-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--cor-texto-principal);
+}
+
+/* Esconde o botão de remover no primeiro serviço para não ficar vazio */
+#servicos-container > .servico-item:first-child > .servico-item-header > .remove-servico-btn {
+  display: none;
+}
+
+.remove-servico-btn {
+  color: #dc3545; /* Cor vermelha para indicar perigo */
+  font-size: 24px;
+}
+
+/* --- ESTILOS PARA O MODAL DE CONFIRMAÇÃO (Novos) --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-content {
+  background-color: var(--cor-branca);
+  padding: 25px;
+  border-radius: 8px;
+  text-align: center;
+  width: 90%;
+  max-width: 350px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+}
+
+.modal-overlay.show .modal-content {
+    transform: scale(1);
+}
+
+.modal-content p {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.modal-actions .btn {
+  flex: 1;
+}
+
+.btn-danger {
+    background-color: #dc3545; /* Vermelho */
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+
+
+/* === Estilos da Janela Modal de Confirmação === */
+
+/* Fundo escurecido que cobre a página inteira */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Corpo da página com a modal aberta */
+body.modal-open .modal-overlay {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* A caixa de conteúdo da modal */
+.modal-content {
+  background-color: #fff;
+  padding: 25px 30px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
+  transform: scale(0.95);
+  transition: transform 0.3s ease;
+}
+
+body.modal-open .modal-content {
+  transform: scale(1);
+}
+
+/* Logo dentro da modal */
+.modal-logo {
+  width: 150px;
+  margin-bottom: 15px;
+}
+
+/* Título e mensagem da modal */
+.modal-content h3 {
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.modal-content p {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 25px;
+  line-height: 1.5;
+}
+
+/* Container dos botões de ação */
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}

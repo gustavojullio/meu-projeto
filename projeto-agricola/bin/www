@@ -1,0 +1,72 @@
+#!/usr/bin/env node
+var app = require('../app');
+var debug = require('debug')('exemplodeploy:server');
+var http = require('http');
+var mongoose = require('mongoose'); // Importe o mongoose aqui
+
+// // --- INÍCIO DA CORREÇÃO ---
+// // Lógica de conexão movida para cá
+// const isTestEnvironment = process.env.NODE_ENV === 'test';
+// const dbConnectionString = isTestEnvironment 
+//   ? 'mongodb://localhost:27017/agricola_teste'
+//   : 'mongodb://localhost:27017/agricola';
+
+// mongoose.connect(dbConnectionString).then(() => {
+//   console.log(`Servidor conectado ao MongoDB em modo: ${isTestEnvironment ? 'TESTE' : 'Desenvolvimento'}`);
+// }).catch((err) => {
+//   console.error('Erro ao conectar ao MongoDB:', err);
+//   process.exit(1); // Encerra a aplicação se não conseguir conectar
+// });
+// // --- FIM DA CORREÇÃO ---
+
+const dbConnectionString = process.env.MONGO_URL || 
+  (process.env.NODE_ENV === 'test' 
+    ? 'mongodb://localhost:27017/agricola_teste'      // 2. Fallback para testes locais (npm run test:integration)
+    : 'mongodb://localhost:27017/agricola');      // 3. Fallback para desenvolvimento local (npm start)
+
+// Conecta ao banco de dados usando a string definida
+mongoose.connect(dbConnectionString).then(() => {
+  console.log(`Servidor conectado ao MongoDB com sucesso!`);
+}).catch((err) => {
+  console.error('Erro ao conectar ao MongoDB:', err);
+  process.exit(1); // Encerra a aplicação se não conseguir conectar
+});
+
+var port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+var server = http.createServer(app);
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+  if (isNaN(port)) { return val; }
+  if (port >= 0) { return port; }
+  return false;
+}
+
+function onError(error) {
+  if (error.syscall !== 'listen') { throw error; }
+  var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}

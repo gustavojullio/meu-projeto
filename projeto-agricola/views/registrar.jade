@@ -1,0 +1,43 @@
+doctype html
+html(lang="pt-BR")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Registrar Novo Produtor - EMATER
+    
+    link(rel="preconnect", href="https://fonts.googleapis.com")
+    link(rel="preconnect", href="https://fonts.gstatic.com", crossorigin)
+    link(href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap", rel="stylesheet")
+    link(rel="stylesheet", href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200")
+
+    link(rel="stylesheet", href="/css/style.css")
+
+  body
+    header.app-header
+      a.icon-button(href="/login")
+        span.material-symbols-outlined arrow_back
+      img.header-logo(src="assets/logo_barra.png", alt="Logo EMATER")
+      div(style="width: 30px;")
+
+    main.container.with-header
+      h2.form-title Registrar Novo Produtor
+
+      
+      if error
+        div(style="color: red; text-align: center; margin-bottom: 15px;")
+          p Ocorreu um erro. O nome de usuário pode já estar em uso.
+
+      
+      form.add-service-form(method="POST", action="/registrar")
+        .form-group
+          label(for="username") Nome de Usuário*
+          input.form-input(type="text", id="username", name="username", placeholder="Escolha um nome de usuário", required)
+        
+        .form-group
+          label(for="password") Senha*
+          input.form-input(type="password", id="password", name="password", placeholder="Crie uma senha forte", required)
+          
+        .form-actions
+          
+          a.btn.btn-secondary(href="/login") Cancelar
+          button.btn.btn-primary(type="submit") Registrar

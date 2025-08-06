@@ -1,0 +1,247 @@
+doctype html
+html(lang="pt-BR")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Serviços - EMATER
+    
+    
+    link(rel="preconnect", href="https://fonts.googleapis.com")
+    link(rel="preconnect", href="https://fonts.gstatic.com", crossorigin)
+    link(href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap", rel="stylesheet")
+    link(rel="stylesheet", href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200")
+    link(rel="stylesheet", href="css/style.css")
+
+  body
+    header.app-header
+      span.material-symbols-outlined.icon-button menu
+      img.header-logo(src="assets/logo_barra.png", alt="Logo EMATER")
+      div(style="width: 30px;")
+
+    main.container.with-header-and-footer
+      button.filter-toggle#filter-toggle
+        span.material-symbols-outlined filter_list
+        span Filtrar
+
+      section.filter-section.hidden#filter-content
+        form.filter-form#filter-form
+          .form-grid
+            .filter-group
+              label(for="filter-text") Pesquisar
+              .input-with-icon
+                span.material-symbols-outlined search
+                input#filter-text(type="text", placeholder="Nome do serviço...")
+            
+            
+            .filter-group
+              label(for="filter-talhao") Talhão
+              .multiselect-container
+                .select-box(onclick="toggleCheckboxes('filter-talhao-checkboxes', event)")
+                  span#filter-talhao-text.placeholder Todos
+                  span.material-symbols-outlined arrow_drop_down
+                #filter-talhao-checkboxes.checkboxes-container
+                  .multiselect-search-wrapper
+                    input.multiselect-search(type="text", placeholder="Pesquisar talhão...", onkeyup="filterOptions(this, 'filter-talhao-checkboxes')", onclick="event.stopPropagation()")
+                  - var talhoes = {'Talhao 1': 'Talhão 1', 'Talhao 2': 'Talhão 2', 'Talhao 3': 'Talhão 3', 'Talhao 4': 'Talhão 4', 'Talhao 6': 'Talhão 6', 'Talhao 7': 'Talhão 7', Sede: 'Sede', Cereja: 'Cereja', Cidreira: 'Cidreira'}
+                  each label, value in talhoes
+                    label
+                      input(type="checkbox", name="filter_talhao[]", value=value, onchange="updateSelectBoxText('filter-talhao-checkboxes', 'filter-talhao-text', 'Todos')")
+                      |  #{label}
+
+            .filter-group
+              label(for="filter-servico") Tipo de Serviço
+              .multiselect-container
+                .select-box(onclick="toggleCheckboxes('filter-servico-checkboxes', event)")
+                  span#filter-servico-text.placeholder Todos
+                  span.material-symbols-outlined arrow_drop_down
+                #filter-servico-checkboxes.checkboxes-container
+                  .multiselect-search-wrapper
+                    input.multiselect-search(type="text", placeholder="Pesquisar serviço...", onkeyup="filterOptions(this, 'filter-servico-checkboxes')", onclick="event.stopPropagation()")
+                  
+                  //- Agora, o filtro usa o 'servicosMap' para criar a lista completa
+                  each label, value in servicosMap
+                    label
+                      input(type="checkbox", name="filter_servico[]", value=value, onchange="updateSelectBoxText('filter-servico-checkboxes', 'filter-servico-text', 'Todos')")
+                      |  #{label}
+
+            .filter-group
+              label(for="filter-data-inicio") Período de
+              .input-with-icon
+                span.material-symbols-outlined calendar_today
+                input#filter-data-inicio(type="date")
+
+            .filter-group
+              label(for="filter-data-fim") Até
+              .input-with-icon
+                span.material-symbols-outlined event
+                input#filter-data-fim(type="date")
+
+          .filter-actions
+            button.btn.btn-secondary(type="button", id="clear-filters-btn") Limpar
+            button.btn.btn-primary(type="submit") Aplicar Filtros
+
+      .service-list
+        if servicos && servicos.length > 0
+          each servico in servicos
+            a(href=`/detalhes/${servico._id}`).service-card
+              //- Aqui está a mágica: traduzimos cada tipo de serviço para seu nome bonito
+              h3= servico.servico_tipo.map(tipo => servicosMap[tipo] || tipo).join(' + ')
+              p= servico.talhao
+              p= servico.data.toLocaleDateString('pt-BR', { timeZone: 'UTC' })
+        else
+          .empty-state
+            span.material-symbols-outlined info
+            p Nenhum serviço cadastrado ainda.
+            p Clique no botão '+' para adicionar seu primeiro serviço.
+      
+      a.fab(href="adicionar-servico")
+        span.material-symbols-outlined add
+      footer.bottom-nav
+        a.nav-item(href="#")
+          span.material-symbols-outlined shopping_cart
+          span.nav-label Compras
+        a.nav-item.active(href="#")
+          span.material-symbols-outlined construction
+          span.nav-label Serviços
+        a.nav-item(href="#")
+          span.material-symbols-outlined grass
+          span.nav-label Colheita
+        a.nav-item(href="#")
+          span.material-symbols-outlined settings
+          span.nav-label Secagem
+
+    script.
+      
+      function toggleCheckboxes(containerId, event) {
+        event.stopPropagation();
+        const checkboxesContainer = document.getElementById(containerId);
+        // Fecha outros dropdowns abertos
+        document.querySelectorAll('.checkboxes-container.show').forEach(openContainer => {
+            if (openContainer.id !== containerId) {
+                openContainer.classList.remove('show');
+            }
+        });
+        checkboxesContainer.classList.toggle('show');
+      }
+
+      function updateSelectBoxText(containerId, textId, placeholderText) {
+        const selectedCheckboxes = document.querySelectorAll(`#${containerId} input[type="checkbox"]:checked`);
+        const selectBoxText = document.getElementById(textId);
+
+        if (selectedCheckboxes.length === 0) {
+          selectBoxText.textContent = placeholderText;
+          selectBoxText.classList.remove('placeholder-filled');
+        } else {
+          const selectedValues = [];
+          selectedCheckboxes.forEach(checkbox => {
+            selectedValues.push(checkbox.parentElement.textContent.trim());
+          });
+          selectBoxText.textContent = selectedValues.join(' + ');
+          selectBoxText.classList.add('placeholder-filled');
+        }
+      }
+      
+      function filterOptions(inputElement, containerId) {
+        const filterText = inputElement.value.toLowerCase();
+        const container = document.getElementById(containerId);
+        const labels = container.getElementsByTagName('label');
+        for (let i = 0; i < labels.length; i++) {
+          const labelText = labels[i].textContent.toLowerCase();
+          if (labelText.includes(filterText)) {
+            labels[i].style.display = "";
+          } else {
+            labels[i].style.display = "none";
+          }
+        }
+      }
+
+      window.addEventListener('click', function(e) {
+        let clickedInside = e.target.closest('.multiselect-container');
+        if (!clickedInside) {
+          document.querySelectorAll('.checkboxes-container.show').forEach(container => {
+            container.classList.remove('show');
+          });
+        }
+      });
+
+      
+      document.addEventListener('DOMContentLoaded', () => {
+        const toggleButton = document.getElementById('filter-toggle');
+        const filterContent = document.getElementById('filter-content');
+        const form = document.getElementById('filter-form');
+        const clearBtn = document.getElementById('clear-filters-btn');
+        const serviceCards = document.querySelectorAll('.service-list .service-card');
+
+        if (toggleButton && filterContent) {
+          toggleButton.addEventListener('click', () => {
+            filterContent.classList.toggle('hidden');
+            toggleButton.classList.toggle('open');
+          });
+        }
+
+        function parseDate(dateString) {
+          if (!dateString) return null;
+          const parts = dateString.split('/');
+          if (parts.length !== 3) return null;
+          const [day, month, year] = parts.map(Number);
+          return new Date(year, month - 1, day);
+        }
+
+        function normalizeString(str) {
+          if (!str) return "";
+          return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        }
+
+        function aplicarFiltros() {
+          const textoFiltro = normalizeString(document.getElementById('filter-text').value.toLowerCase());
+          const dataInicioFiltro = document.getElementById('filter-data-inicio').value;
+          const dataFimFiltro = document.getElementById('filter-data-fim').value;
+          const dataInicio = dataInicioFiltro ? new Date(dataInicioFiltro + 'T00:00:00') : null;
+          const dataFim = dataFimFiltro ? new Date(dataFimFiltro + 'T00:00:00') : null;
+
+          const servicoCheckboxes = document.querySelectorAll('#filter-servico-checkboxes input[type="checkbox"]:checked');
+          const servicosSelecionados = Array.from(servicoCheckboxes).map(cb => normalizeString(cb.value.toLowerCase()));
+
+          
+          const talhaoCheckboxes = document.querySelectorAll('#filter-talhao-checkboxes input[type="checkbox"]:checked');
+          const talhoesSelecionados = Array.from(talhaoCheckboxes).map(cb => normalizeString(cb.parentElement.textContent.trim().toLowerCase()));
+
+          serviceCards.forEach(card => {
+            const nomeServico = normalizeString(card.querySelector('h3').textContent.toLowerCase());
+            const pElements = card.querySelectorAll('p');
+            const talhaoTexto = pElements.length > 0 ? normalizeString(pElements[0].textContent.toLowerCase()) : "";
+            const dataServicoTexto = pElements.length > 1 ? pElements[1].textContent : '';
+            const dataServico = parseDate(dataServicoTexto);
+            
+            const passouTexto = !textoFiltro || nomeServico.includes(textoFiltro);
+            const passouServico = servicosSelecionados.length === 0 || servicosSelecionados.some(filtro => nomeServico.includes(filtro));
+            const passouTalhao = talhoesSelecionados.length === 0 || talhoesSelecionados.some(filtro => talhaoTexto.includes(filtro));
+            const passouDataInicio = !dataInicio || !dataServico || dataServico >= dataInicio;
+            const passouDataFim = !dataFim || !dataServico || dataServico <= dataFim;
+
+            if (passouTexto && passouServico && passouTalhao && passouDataInicio && passouDataFim) {
+              card.style.display = 'block';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        }
+
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          aplicarFiltros();
+        });
+
+        clearBtn.addEventListener('click', () => {
+          form.reset();
+          
+          document.querySelectorAll('#filter-servico-checkboxes input[type="checkbox"]').forEach(cb => cb.checked = false);
+          updateSelectBoxText('filter-servico-checkboxes', 'filter-servico-text', 'Todos');
+          
+          
+          document.querySelectorAll('#filter-talhao-checkboxes input[type="checkbox"]').forEach(cb => cb.checked = false);
+          updateSelectBoxText('filter-talhao-checkboxes', 'filter-talhao-text', 'Todos');
+
+          aplicarFiltros();
+        });
+      });

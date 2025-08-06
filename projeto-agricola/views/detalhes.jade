@@ -1,0 +1,154 @@
+doctype html
+html(lang="pt-BR")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Detalhes do Serviço - EMATER
+
+    
+    link(rel="preconnect", href="https://fonts.googleapis.com")
+    link(rel="preconnect", href="https://fonts.gstatic.com", crossorigin)
+    link(href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap", rel="stylesheet")
+    link(rel="stylesheet", href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined")
+    link(rel="stylesheet", href="/css/style.css") 
+
+  body
+    header.app-header
+      a.icon-button(href="/servicos") 
+        span.material-symbols-outlined arrow_back
+      img.header-logo(src="/assets/logo_barra.png", alt="Logo EMATER") 
+      div(style="width: 40px")
+
+    main.container.with-header-and-footer
+      h2 Detalhes do Serviço
+
+      
+      if servico
+        .details-card
+          .detail-section
+            h3 Tipo de Serviço
+            ul.repeatable-list 
+              each tipo in servico.servico_tipo
+                li.repeatable-item
+                  span.repeatable-item-text= servicosMap[tipo] || tipo
+
+          .detail-section
+            h3 Talhão
+            ul.repeatable-list 
+              li.repeatable-item
+                span.repeatable-item-text= servico.talhao
+
+          .detail-section
+            h3 Data do Serviço
+            
+            p= servico.data.toLocaleDateString('pt-BR', { timeZone: 'UTC' })
+
+          .detail-section
+            h3 Valor do Serviço
+            p= `R$ ${servico.valor_servico.toFixed(2).replace('.', ',')}`
+
+          
+          if servico.produtos && servico.produtos.length > 0
+            .detail-section
+              h3 Produtos Utilizados
+              ul.repeatable-list
+                each produto in servico.produtos
+                  li.repeatable-item.product-detail
+                    .product-info
+                      span.repeatable-item-text= produto.nome
+                      
+                      span.product-meta= `${produto.qtde} ${produto.unidade}`
+                    .product-value
+                      
+                      span.product-meta= `R$ ${produto.valor.toFixed(2)}`
+
+          
+          if servico.trabalhadores && servico.trabalhadores.length > 0
+            .detail-section
+              h3 Trabalhadores
+              ul.repeatable-list
+                each trabalhador in servico.trabalhadores
+                  li.repeatable-item
+                    span.repeatable-item-text= trabalhador.nome
+
+          
+          .action-buttons
+            a.btn-editar(href=`/editar/${servico._id}`)
+              span.material-symbols-outlined edit
+            a.btn-excluir(href=`/excluir/${servico._id}`) 
+              span.material-symbols-outlined delete
+
+      else
+        
+        .details-card
+          p Serviço não encontrado ou você não tem permissão para visualizá-lo.
+    
+    
+    footer.bottom-nav
+      a.nav-item(href="#")
+        span.material-symbols-outlined shopping_cart
+        span.nav-label Compras
+      a.nav-item.active(href="/servicos")
+        span.material-symbols-outlined construction
+        span.nav-label Serviços
+      a.nav-item(href="#")
+        span.material-symbols-outlined grass
+        span.nav-label Colheita
+      a.nav-item(href="#")
+        span.material-symbols-outlined settings
+        span.nav-label Secagem
+
+    .modal-overlay#confirm-modal
+      .modal-content
+        img.modal-logo(src="/assets/logo_barra.png", alt="Logo EMATER")
+        h3 Confirmar Exclusão
+        p Você tem certeza de que deseja excluir este serviço? Esta ação não pode ser desfeita.
+        
+        
+        form#delete-form(method="POST", action="")
+          .modal-actions
+            button.btn.btn-secondary#modal-btn-cancel(type="button") Cancelar
+            button.btn.btn-primary.btn-danger(type="submit") Confirmar
+    script.
+      document.addEventListener('DOMContentLoaded', () => {
+        const modal = document.getElementById('confirm-modal');
+        const deleteForm = document.getElementById('delete-form');
+        const btnCancel = document.getElementById('modal-btn-cancel');
+        const deleteLinks = document.querySelectorAll('a.btn-excluir');
+
+        if (!modal) return;
+
+        
+        const openModal = (url) => {
+          
+          deleteForm.action = url;
+          
+          document.body.classList.add('modal-open');
+        };
+
+        
+        const closeModal = () => {
+          document.body.classList.remove('modal-open');
+        };
+
+        
+        deleteLinks.forEach(link => {
+          link.addEventListener('click', (e) => {
+            
+            e.preventDefault();
+            
+            const deleteUrl = link.getAttribute('href');
+            openModal(deleteUrl);
+          });
+        });
+
+        
+        btnCancel.addEventListener('click', closeModal);
+
+        
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            closeModal();
+          }
+        });
+      });

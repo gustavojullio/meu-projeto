@@ -1,0 +1,25 @@
+doctype html
+html(lang="pt-BR")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Login - EMATER
+    link(rel="stylesheet", href="css/style.css")
+    link(rel="preconnect", href="https://fonts.googleapis.com")
+    link(rel="preconnect", href="https://fonts.gstatic.com", crossorigin)
+    link(href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap", rel="stylesheet")
+  body
+    .container.login-container
+      img.login-logo(src="assets/logo_barra.png", alt="Logo da EMATER Minas Gerais")
+      h1.form-title Conta
+
+      if error && error.length > 0
+      p.error-message(style="color: red; text-align: center;")= error[0]
+
+      form.login-form(action="/login", method="POST")
+        //- Os inputs agora não têm mais comentários na mesma linha
+        input.form-input(type="email", name="email", placeholder="Digite o e-mail", required)
+        input.form-input(type="password", name="senha", placeholder="Digite a senha", required)
+        
+        button.btn.btn-primary.btn-full-width(type="submit") Iniciar Sessão
+        a.forgot-password-link(href="#") Esqueceu a senha?
