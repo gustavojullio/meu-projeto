@@ -18,14 +18,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     
-    <!-- Carrega o arquivo CSS estático -->
+    <!-- Carrega o arquivo CSS estático personalizado (deve ser o último para sobrescrever) -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
     <!-- Cabeçalho padrão para todas as páginas -->
     <header class="app-header">
         <a class="icon-button" href="javascript:history.back()">
+            <span class="material-symbols-outlined">arrow_back</span>
         </a>
+{% if request.user.is_authenticated %}
+  <div class="position-absolute top-0 end-0 p-3">
+    <form method="post" action="{% url 'logout' %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-outline-secondary">
+        Sair <i class="bi bi-person-circle"></i>
+      </button>
+    </form>
+  </div>
+{% endif %}
         <img class="header-logo" src="{% static 'assets/logo-emater.png' %}" alt="Logo EMATER">
         <div style="width: 40px;"></div> <!-- Elemento para manter o alinhamento -->
     </header>
@@ -38,10 +49,9 @@
     </main>
 
     <!-- Você pode adicionar um rodapé ou scripts globais aqui se necessário -->
+    <!-- O rodapé da versão mobile será ocultado via CSS para desktop -->
+    <footer class="bottom-nav">
+        <!-- Conteúdo do rodapé (se houver, será ocultado pelo CSS em desktop) -->
+    </footer>
 </body>
-
-<footer class="bottom-nav">
-
-</footer>
-
 </html>

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Serviços - EMATER{% endblock %}
+{% block title %}Lista de Produtores - EMATER{% endblock %}
 
 {% block content %}
 <div class="container my-3 px-2">
@@ -44,12 +44,12 @@
                                 </tr>
                             {% else %}
                                 <tr>
-                                    <td colspan="4" class="text-muted text-center">Nenhum produtor relacionado a este Coordenador</td>
+                                    <td colspan="3" class="text-muted text-center">Nenhum produtor relacionado a este Coordenador</td>
                                 </tr>
                             {% endif %}
                         {% empty %}
                             <tr>
-                                <td colspan="4" class="text-center text-muted">Não há registros cadastrados</td>
+                                <td colspan="3" class="text-center text-muted">Não há registros cadastrados</td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -103,22 +103,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Cadastrar Talhão (Opcional, se terreno estiver presente) -->
-        {% if terreno %}
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingTalhao">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTalhao" aria-expanded="false" aria-controls="collapseTalhao">
-                    🌱 Cadastrar Talhão
-                </button>
-            </h2>
-            <div id="collapseTalhao" class="accordion-collapse collapse" aria-labelledby="headingTalhao" data-bs-parent="#painelAcoes">
-                <div class="accordion-body">
-                    <a href="{% url 'coordenador:talhao_cria' terreno.id %}" class="btn btn-outline-success">Cadastrar novo talhão</a>
-                </div>
-            </div>
-        </div>
-        {% endif %}
     </div>
 
 </div>

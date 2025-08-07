@@ -63,7 +63,6 @@ def listaProd(request):
 
     return render(request,"coordenador/listaProdutores.html",contexto)
 
-
 @login_required
 def criarProdutor(request): 
     if request.method == "POST":
@@ -71,6 +70,7 @@ def criarProdutor(request):
         user_form = UserForm(request.POST)
         if form.is_valid() and user_form.is_valid():            
             user = user_form.save(commit=False)
+            user.username = user.email
             user.set_password(user.password)
             user.save()
             produtor = form.save(commit=False)

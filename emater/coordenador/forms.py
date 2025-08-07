@@ -14,14 +14,10 @@ class UserForm(forms.ModelForm):
             widget=forms.PasswordInput(),
             label="Senha"
         )
-    
-    username = forms.CharField(
-        label="Identificador"
-    )
 
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'password', 'confirmar_senha', 'email']
+        fields = ['first_name', 'last_name', 'password', 'confirmar_senha', 'email']
 
     def clean(self):
             cleaned_data = super().clean()

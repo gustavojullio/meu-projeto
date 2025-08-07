@@ -45,31 +45,32 @@
                     <label class="form-label fw-bold">🗓️ Validade do CAF</label>
                     <div class="form-control bg-light">{{ produtor.validade_caf }}</div>
                 </div>
-{% if terrenos %}
-<div class="mt-4">
-    <h5 class="text-success">🌱 Lista de Terrenos</h5>
-    <ul class="list-group">
-{% for terreno in terrenos %}
-    <li class="list-group-item"><a href="{% url 'coordenador:terreno_detalhe' terreno.id %}">{{ terreno.nome }}</li>
-{% endfor %}
-{% else %}
-<div class="mt-4">
-    <h5 class="text-success">🌱 Nenhum Terreno cadastrado.</h5>
-</div>
-    </ul>
-
-</div>
-{% endif %}
-    <div class="mt-3 text-end">
-        <a href="{% url 'coordenador:terreno_cria' produtor.id %}" class="btn btn-outline-success">➕ Cadastrar Terreno</a>
+                {% if terrenos %}
+                <div class="col-12 mt-4">
+                    <h5 class="text-success">🌱 Lista de Terrenos</h5>
+                    <ul class="list-group">
+                        {% for terreno in terrenos %}
+                            <li class="list-group-item"><a href="{% url 'coordenador:terreno_detalhe' terreno.id %}">{{ terreno.nome }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% else %}
+                <div class="col-12 mt-4">
+                    <h5 class="text-success">🌱 Nenhum Terreno cadastrado.</h5>
+                </div>
+                {% endif %}
+                
+                <div class="d-flex justify-content-between flex-wrap mt-4 gap-2">
+                    <a href="{% url 'coordenador:produtor_atualiza' produtor.id %}" class="btn btn-success">✏️ Atualizar Produtor</a>
+                    <a href="{% url 'coordenador:produtor_exclui' produtor.id %}" class="btn btn-danger"
+                        onclick="return confirm('Tem certeza que deseja excluir este produtor?');">🗑️ Excluir Produtor</a>
+                        
+                    <a href="{% url 'coordenador:terreno_cria' produtor.id %}" class="btn btn-outline-success">➕ Cadastrar Terreno</a>
+                    <a href="{% url 'coordenador:servicos-produtor' produtor.user.email %}" class="btn btn-outline-primary">Serviços por produtor</a>
+                </div>
+            </div>
+        </div>
     </div>
-<div class="d-flex justify-content-between flex-wrap mt-4 gap-2">
-    <a href="{% url 'coordenador:produtor_atualiza' produtor.id %}" class="btn btn-success">✏️ Atualizar Produtor</a>
-    <a href="{% url 'coordenador:produtor_exclui' produtor.id %}" class="btn btn-danger"
-        onclick="return confirm('Tem certeza que deseja excluir este produtor?');">🗑️ Excluir Produtor</a>
-    <a href="{% url 'coordenador:servicos-produtor' produtor.user.email %}" class="btn btn-outline-success">Servicos por produtor</a>
-    <a href="{% url 'coordenador:Lista_Produtores' %}" class="btn btn-secondary">🔙 Voltar</a>
-</div>
 
     {% else %}
     <div class="alert alert-warning text-center mt-4">

@@ -6,15 +6,15 @@
 {% block content %}
 <div class="container my-3 px-2">
     <div class="card border-0 shadow-sm">
-        <div class="card-header bg-success text-white">
-            <h4 class="mb-0 text-center">📋 Adicionar Novo Talhão</h4>
+        <div class="card-header bg-success text-white text-center">
+            <h4 class="mb-0">📋 Adicionar Novo Talhão</h4>
         </div>
         <div class="card-body">
             <form method="POST" class="row g-3">
                 {% csrf_token %}
 
                 {% for field in form %}
-                <div class="col-12">
+                <div class="col-12 col-md-6"> <!-- Adicionado col-md-6 para layout em duas colunas -->
                     <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
                     {{ field }}
                     {% if field.errors %}
@@ -26,7 +26,7 @@
                     {% endif %}
                 </div>
                 {% endfor %}
-                <div class="col-12">
+                <div class="col-12 col-md-6"> <!-- Adicionado col-md-6 para layout em duas colunas -->
                     <label for="cidade" class="form-label">Cidade</label>
                     <select name="cidade" id="cidade" class="form-select" required>
                         <option value="">Selecione...</option>
@@ -42,12 +42,8 @@
                     </div>
                 </div>
                 {% endif %}
-                <div class="col-12 text-center">
-                    <button type="submit" class="btn btn-success w-100">✅ Salvar</button>
-                </div>
-                <div class="col-12 text-center">
-                    <a href="{% url 'coordenador:terreno_detalhe' terreno.id %}"
-                        class="btn btn-secondary w-100">Voltar</a>
+                <div class="col-12 text-center text-md-end mt-4"> <!-- Ajustado para desktop -->
+                    <button type="submit" class="btn btn-success w-100 w-md-auto">✅ Salvar</button>
                 </div>
             </form>
         </div>
