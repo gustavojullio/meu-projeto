@@ -3,6 +3,8 @@ var router = express.Router();
 var authController = require('../controllers/authController');
 var Servico = require('../models/Servico');
 var Usuario = require('../models/Usuario');
+var { parse } = require('querystring');
+const { log } = require('console');
 
 // Mapa central de serviços para tradução e exibição
 const servicosMap = {
@@ -21,7 +23,7 @@ const servicosMap = {
   limpeza: 'Limpeza',
   microterraceamento: 'Microterraceamento',
   poda: 'Poda',
-  pulverização_nutricional: 'Pulverização Nutricional',
+  pulverizacao_nutricional: 'Pulverização Nutricional',
   plantio: 'Plantio',
   replantio: 'Replantio',
   rocada: 'Roçada'
@@ -54,7 +56,7 @@ router.get('/servicos', authController.isAuthenticated, async (req, res, next) =
 });
 
 router.get('/adicionar-servico', authController.isAuthenticated, (req, res, next) => {
-  res.render('adicionar-servico');
+  res.render('adicionar-servico', { servicosMap });
 });
 
 router.post('/adicionar-servico', authController.isAuthenticated, async (req, res, next) => {
@@ -100,7 +102,7 @@ router.get('/editar/:id', authController.isAuthenticated, async (req, res, next)
   try {
     const servico = await Servico.findOne({ _id: req.params.id, proprietario: req.session.userId });
     if (!servico) return res.redirect('/servicos');
-    res.render('editar', { servico });
+    res.render('editar', { servico, servicosMap });
   } catch (error) {
     next(error);
   }
@@ -111,40 +113,35 @@ router.post('/editar/:id', authController.isAuthenticated, async (req, res, next
     const { servicos } = req.body;
     const dadosAtualizados = servicos ? servicos[0] : null;
 
-    // Defesa contra dados inválidos
     if (!dadosAtualizados) {
       return res.status(400).send("Dados de edição inválidos.");
     }
     
-    // CORREÇÃO 1: Verifica se o serviço existe ANTES de tentar atualizar
     const servicoExistente = await Servico.findOne({ _id: req.params.id, proprietario: req.session.userId });
     if (!servicoExistente) {
       return res.status(404).send("Serviço não encontrado para atualização.");
     }
     
-    // Filtra produtos para remover entradas vazias
     dadosAtualizados.produtos = (dadosAtualizados.produtos || []).filter(p => p && p.nome && p.nome.trim() !== '');
     
-    // CORREÇÃO 2: Lógica de filtragem de trabalhadores mais robusta
     let trabalhadoresCorrigidos = [];
     if (Array.isArray(dadosAtualizados.trabalhadores)) {
-  dadosAtualizados.trabalhadores.forEach(trabalhador => {
-    if (!trabalhador || !trabalhador.nome) return;
+      dadosAtualizados.trabalhadores.forEach(trabalhador => {
+        if (!trabalhador || !trabalhador.nome) return;
 
-    if (Array.isArray(trabalhador.nome)) {
-      trabalhador.nome.forEach(nome => {
-        if (typeof nome === 'string' && nome.trim() !== '') {
-          trabalhadoresCorrigidos.push({ nome: nome.trim() });
+        if (Array.isArray(trabalhador.nome)) {
+          trabalhador.nome.forEach(nome => {
+            if (typeof nome === 'string' && nome.trim() !== '') {
+              trabalhadoresCorrigidos.push({ nome: nome.trim() });
+            }
+          });
+        } else if (typeof trabalhador.nome === 'string' && trabalhador.nome.trim() !== '') {
+          trabalhadoresCorrigidos.push({ nome: trabalhador.nome.trim() });
         }
       });
-    } else if (typeof trabalhador.nome === 'string' && trabalhador.nome.trim() !== '') {
-      trabalhadoresCorrigidos.push({ nome: trabalhador.nome.trim() });
     }
-  });
-}
     dadosAtualizados.trabalhadores = trabalhadoresCorrigidos;
 
-    // Atualiza o serviço no banco de dados
     await Servico.updateOne({ _id: req.params.id }, dadosAtualizados, { runValidators: true });
     
     res.redirect(`/detalhes/${req.params.id}`);
@@ -162,5 +159,43 @@ router.post('/excluir/:id', authController.isAuthenticated, async (req, res, nex
     next(error);
   }
 });
+
+// Nova rota para o Service Worker enviar os dados sincronizados
+router.post('/api/sync-services', authController.isAuthenticated, async (req, res) => {
+  try {
+    const { services } = req.body;
+    if (!Array.isArray(services) || services.length === 0) {
+      return res.status(400).json({ message: "Nenhum serviço para sincronizar." });
+    }
+
+    const savedServices = [];
+    for (const servicoData of services) {
+        // A mesma lógica de validação do POST normal
+        const produtos = (servicoData.produtos || []).filter(p => p && p.nome && p.nome.trim() !== '');
+        const trabalhadores = (servicoData.trabalhadores || []).filter(t => t && t.nome && t.nome.trim() !== '');
+        const novoServico = new Servico({
+            ...servicoData,
+            proprietario: req.session.userId,
+            produtos,
+            trabalhadores
+        });
+        await novoServico.save();
+        savedServices.push(novoServico);
+    }
+
+    return res.status(201).json({ 
+      success: true, 
+      message: `${savedServices.length} serviços sincronizados com sucesso.` 
+    });
+  } catch (error) {
+    console.error('Erro ao sincronizar serviços:', error);
+    return res.status(500).json({ 
+      success: false, 
+      message: 'Erro interno ao sincronizar os serviços.',
+      error: error.message
+    });
+  }
+});
+
 
 module.exports = router;

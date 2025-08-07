@@ -1,3 +1,5 @@
+import { saveOfflineService, getOfflineServices, deleteOfflineService } from "./db.js";
+
 document.addEventListener('DOMContentLoaded', () => {
     let servicoIndex = 1;
     let servicoParaRemover = null; 
@@ -32,7 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // CORRIGIDO: Evento 'change' delegado para atualizar o texto do multiselect
     document.body.addEventListener('change', (e) => {
         if (e.target.matches('.checkboxes-container input[type="checkbox"]')) {
             updateSelectBoxText(e.target);
@@ -197,7 +198,6 @@ document.addEventListener('DOMContentLoaded', () => {
         checkboxesContainer.classList.toggle('show');
     }
 
-    // CORRIGIDO: A função agora funciona corretamente com delegação de eventos
     function updateSelectBoxText(checkbox) {
         const container = checkbox.closest('.checkboxes-container');
         const textElement = container.closest('.multiselect-container').querySelector('.select-box span:first-child');
@@ -229,4 +229,74 @@ document.addEventListener('DOMContentLoaded', () => {
         if (containerId.includes('servico')) return 'Selecione o(s) serviço(s)';
         return 'Selecione';
     }
+
+    // --- LÓGICA DE SINCRONIZAÇÃO EM SEGUNDO PLANO (PWA) ---
+    const form = document.querySelector('.add-service-form');
+    const offlineMessage = document.getElementById('offline-message');
+    
+    // Escuta o evento de submissão do formulário
+    form.addEventListener('submit', async (event) => {
+        // Interrompe o envio padrão do formulário
+        event.preventDefault();
+
+        // Checagem de validade do formulário para evitar envios vazios
+        if (!form.checkValidity()) {
+            return;
+        }
+
+        // Verifica se a aplicação está offline
+        if (!navigator.onLine) {
+            // Se estiver offline, prepara os dados do formulário
+            const formData = new FormData(form);
+            const rawData = Object.fromEntries(formData.entries());
+            const serviceData = { servicos: [] };
+            
+            // Lógica para estruturar os dados do formulário corretamente em um objeto
+            const parsedServices = {};
+            for (const [key, value] of Object.entries(rawData)) {
+                const match = key.match(/^servicos\[(\d+)\]\[(\w+)(?:\[(\d+)\])?(?:\[(\w+)\])?(?:\[(\d+)\])?/);
+                if (match) {
+                    const [, index, field, subIndex, subField] = match;
+                    if (!parsedServices[index]) parsedServices[index] = {};
+                    if (subIndex !== undefined && subField !== undefined) {
+                        if (!parsedServices[index][field]) parsedServices[index][field] = [];
+                        if (!parsedServices[index][field][subIndex]) parsedServices[index][field][subIndex] = {};
+                        parsedServices[index][field][subIndex][subField] = value;
+                    } else if (subIndex !== undefined) {
+                        if (!parsedServices[index][field]) parsedServices[index][field] = [];
+                        parsedServices[index][field][subIndex] = value;
+                    } else {
+                        parsedServices[index][field] = value;
+                    }
+                }
+            }
+            serviceData.servicos = Object.values(parsedServices);
+
+            // Salva os dados no IndexedDB
+            await saveOfflineService(serviceData);
+            console.log('Serviço salvo offline no IndexedDB!');
+            offlineMessage.style.display = 'block';
+
+            // Registra um evento de sincronização em segundo plano
+            const registration = await navigator.serviceWorker.ready;
+            await registration.sync.register('sync-new-services');
+            
+            // Redireciona o usuário para a lista de serviços para dar a sensação de sucesso
+            window.location.href = '/servicos';
+        } else {
+            // Se estiver online, envia o formulário normalmente
+            form.submit();
+        }
+    });
+
+    // Função para tratar a sincronização quando a conexão voltar
+    navigator.serviceWorker.addEventListener('message', async (event) => {
+      if (event.data.type === 'SYNC_SUCCESS') {
+        const { serviceId } = event.data;
+        await deleteOfflineService(serviceId);
+        console.log(`Serviço com ID ${serviceId} sincronizado e removido do IndexedDB.`);
+        // Você pode mostrar uma notificação ao usuário aqui se desejar
+      }
+    });
+
 });
