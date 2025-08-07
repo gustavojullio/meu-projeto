@@ -5,6 +5,8 @@ html(lang="pt-BR")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
     title Adicionar Serviço - EMATER
     
+    // Adiciona o manifesto do PWA
+    link(rel="manifest", href="/manifest.json")
     link(rel="preconnect", href="https://fonts.googleapis.com")
     link(rel="preconnect", href="https://fonts.gstatic.com", crossorigin)
     link(href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap", rel="stylesheet")
@@ -21,6 +23,11 @@ html(lang="pt-BR")
 
     main.container.with-header
       h2.form-title Adicionar Novos Serviços
+      
+      // Mensagem para o usuário offline
+      #offline-message.alert.alert-warning(style="display:none;")
+        | Você está offline. O serviço será salvo no seu dispositivo e enviado assim que a conexão for restabelecida.
+      
       form.add-service-form(method="POST", action="/adicionar-servico")
         
         #servicos-container
@@ -67,7 +74,7 @@ html(lang="pt-BR")
                       limpeza: 'Limpeza',
                       microterraceamento: 'Microterraceamento',
                       poda: 'Poda',
-                      pulverização_nutricional: 'Pulverização Nutricional',
+                      pulverizacao_nutricional: 'Pulverização Nutricional',
                       plantio: 'Plantio',
                       replantio: 'Replantio',
                       rocada: 'Roçada'
@@ -147,10 +154,6 @@ html(lang="pt-BR")
               span.material-symbols-outlined add_circle
               | Adicionar novo trabalhador
 
-        //- button#add-servico-btn.add-item-btn(type="button")
-        //-   span.material-symbols-outlined add_circle
-        //-   | Adicionar outro serviço
-
         .form-actions
           a.btn.btn-secondary(href="/servicos") Cancelar
           button.btn.btn-primary(type="submit") Salvar
@@ -161,9 +164,10 @@ html(lang="pt-BR")
         .modal-actions
           button#modal-btn-cancel.btn.btn-secondary Cancelar
           button#modal-btn-confirm.btn.btn-danger Confirmar
+    
+    // A tag de script foi alterada para type="module"
+    script(src="/js/adicionar-servico.js", type="module")
 
-    script(src="/js/adicionar-servico.js")
-    //- ADICIONADO: Script para validação do campo de serviços
     script.
       document.addEventListener('DOMContentLoaded', () => {
         const form = document.querySelector('.add-service-form');
@@ -173,10 +177,10 @@ html(lang="pt-BR")
             let allValid = true;
 
             servicoItems.forEach((item, index) => {
-              const serviceCheckboxes = item.querySelectorAll(`input[name^="servicos[${index}][servico_tipo]"]`);
+              const serviceCheckboxes = item.querySelectorAllinput[name^="servicos[${index}][servico_tipo]"]);
               const isAnyChecked = Array.from(serviceCheckboxes).some(checkbox => checkbox.checked);
               
-              const multiselectContainer = item.querySelector(`#servico-checkboxes-container-${index}`).closest('.multiselect-container');
+              const multiselectContainer = item.querySelector#servico-checkboxes-container-${index}).closest('.multiselect-container');
               let errorMsg = multiselectContainer.querySelector('.validation-error');
 
               if (!isAnyChecked) {
@@ -203,4 +207,3 @@ html(lang="pt-BR")
           });
         }
       });
-
