@@ -16,24 +16,6 @@ from datetime import datetime
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 
-
-# @api_view(['POST'])
-# def api_autenticar_produtor(request):
-#     email = request.data.get('email')
-#     password = request.data.get('password')
-
-#     if not email or not password:
-#         return JsonResponse({'erro': 'E-mail e senha são obrigatórios.'}, status=status.HTTP_400_BAD_REQUEST)
-
-#     # Use o e-mail como `username` na função authenticate.
-#     authenticated_user = authenticate(username=email, password=password)
-
-#     if authenticated_user is not None:
-#         # A autenticação já está validada, você não precisa fazer mais nada aqui.
-#         return JsonResponse({'autenticado': True, 'email': authenticated_user.email, 'nome': authenticated_user.first_name}, status=status.HTTP_200_OK)
-#     else:
-#         return JsonResponse({'autenticado': False, 'mensagem': 'Credenciais inválidas.'}, status=status.HTTP_401_UNAUTHORIZED)
-    
 @api_view(['POST'])
 def api_autenticar_produtor(request):
     email = request.data.get('email')

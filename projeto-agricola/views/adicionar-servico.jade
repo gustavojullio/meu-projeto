@@ -40,13 +40,18 @@ html(lang="pt-BR")
               label(for="data-0") Data*
               input.form-input(type="date", id="data-0", name="servicos[0][data]", required)
             
+            //- .form-group
+            //-   label(for="talhao-0") Talhão*
+            //-   select.form-input(id="talhao-0", name="servicos[0][talhao]", required)
+            //-     option(value="", disabled, selected) Selecione um talhão
+            //-     option(value="Talhão 1") Talhão 1
+            //-     option(value="Talhão 2") Talhão 2
+            //-     option(value="Sede") Sede
             .form-group
               label(for="talhao-0") Talhão*
               select.form-input(id="talhao-0", name="servicos[0][talhao]", required)
                 option(value="", disabled, selected) Selecione um talhão
-                option(value="Talhão 1") Talhão 1
-                option(value="Talhão 2") Talhão 2
-                option(value="Sede") Sede
+
             
             .form-group
               label(for="servico-select-box-text-0") Serviço(s)*
@@ -164,7 +169,10 @@ html(lang="pt-BR")
         .modal-actions
           button#modal-btn-cancel.btn.btn-secondary Cancelar
           button#modal-btn-confirm.btn.btn-danger Confirmar
-    
+    script.
+      document.addEventListener('DOMContentLoaded', () => {
+        window.produtorEmail = "#{email}";
+      });
     // A tag de script foi alterada para type="module"
     script(src="/js/adicionar-servico.js", type="module")
 

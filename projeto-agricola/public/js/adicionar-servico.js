@@ -2,6 +2,77 @@ import { saveOfflineService, getOfflineServices, deleteOfflineService } from "./
 
 document.addEventListener('DOMContentLoaded', () => {
     let servicoIndex = 1;
+    // --- REQUISIÇÃO À API PARA OBTER TALHÕES ---
+    if (typeof produtorEmail !== 'undefined') {
+    // Substitua a chamada atual por:
+fetch(`/api/talhoes/${produtorEmail}`)
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`Erro HTTP: ${response.status}`);
+    }
+    return response.json();
+  })
+//   .then(data => {
+//     if (!data.terrenos) {
+//       throw new Error('Estrutura de dados inválida: falta propriedade terrenos');
+//     }
+    
+//     const talhoes = [];
+//     data.terrenos.forEach(terreno => {
+//       terreno.talhoes.forEach(t => {
+//         talhoes.push({ id: t.id, nome: t.nome });
+//       });
+//     });
+
+//     const select = document.getElementById('talhao-0');
+//     if (select) {
+//       select.innerHTML = '<option value="" disabled selected>Selecione um talhão</option>';
+//       talhoes.forEach(t => {
+//         const option = document.createElement('option');
+//         option.value = t.id;
+//         option.textContent = t.nome;
+//         select.appendChild(option);
+//       });
+      
+//       // Adicione este log para debug
+//       console.log('Talhões carregados:', talhoes);
+//     }
+//   })
+    .then(data => {
+        if (!data.terrenos) throw new Error('Estrutura de dados inválida');
+    
+        const select = document.getElementById('talhao-0');
+        if (select) {
+            select.innerHTML = '<option value="" disabled selected>Selecione um talhão</option>';
+        
+            data.terrenos.forEach(terreno => {
+                terreno.talhoes.forEach(t => {
+            // Aqui enviamos o nome como value também
+                    const option = new Option(t.nome, t.nome); // Note que usamos t.nome como value
+                    option.dataset.id = t.id; // Guardamos o ID como data-attribute se precisar
+                    select.add(option);
+                });
+            });
+        }
+    })
+  .catch(err => {
+    console.error('Erro ao carregar talhões:', err);
+    
+    // Feedback visual para o usuário
+    const select = document.getElementById('talhao-0');
+    if (select) {
+      select.innerHTML = `
+        <option value="" disabled selected>
+          Erro ao carregar talhões. Recarregue a página.
+        </option>
+      `;
+    }
+    
+    // Opcional: exibir notificação para o usuário
+    alert('Não foi possível carregar os talhões. Por favor, tente novamente.');
+  });
+}
+
     let servicoParaRemover = null; 
 
     const confirmModal = document.getElementById('confirm-modal');

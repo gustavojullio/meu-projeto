@@ -6,6 +6,35 @@ var Usuario = require('../models/Usuario');
 var { parse } = require('querystring');
 const { log } = require('console');
 
+const axios = require('axios'); // Certifique-se que está no topo do arquivo
+
+// Adicione esta nova rota ANTES do module.exports = router;
+router.get('/api/talhoes/:email', authController.isAuthenticated, async (req, res) => {
+  try {
+    console.log(`Buscando talhões para: ${req.params.email}`);
+    
+    const response = await axios.get(`http://web:8000/coordenador/api/produtor/${req.params.email}`, {
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
+
+    if (!response.data) {
+      throw new Error('Resposta vazia da API do Django');
+    }
+
+    console.log('Dados recebidos do Django:', response.data);
+    res.json(response.data);
+    
+  } catch (error) {
+    console.error('Erro na rota proxy:', error.message);
+    res.status(500).json({ 
+      error: 'Erro ao buscar talhões',
+      details: error.message 
+    });
+  }
+});
+
 // Mapa central de serviços para tradução e exibição
 const servicosMap = {
   adubacao: 'Adubação',
@@ -55,33 +84,81 @@ router.get('/servicos', authController.isAuthenticated, async (req, res, next) =
   }
 });
 
-router.get('/adicionar-servico', authController.isAuthenticated, (req, res, next) => {
-  res.render('adicionar-servico', { servicosMap });
+
+router.get('/adicionar-servico', authController.isAuthenticated, async (req, res, next) => {
+  try {
+    const usuario = await Usuario.findById(req.session.userId);
+    res.render('adicionar-servico', { servicosMap, email: usuario.username });
+  } catch (error) {
+    next(error);
+  }
 });
+
+// router.post('/adicionar-servico', authController.isAuthenticated, async (req, res, next) => {
+//   const { servicos } = req.body;
+//   if (!Array.isArray(servicos) || servicos.length === 0) {
+//     return res.redirect('/adicionar-servico');
+//   }
+//   try {
+//     for (const servicoData of servicos) {
+//       const produtos = (servicoData.produtos || []).filter(p => p && p.nome && p.nome.trim() !== '');
+//       let trabalhadoresCorrigidos = [];
+//       (servicoData.trabalhadores || []).forEach(trabalhador => {
+//         if (!trabalhador) return;
+//         if (Array.isArray(trabalhador.nome)) {
+//           trabalhadoresCorrigidos.push(...trabalhador.nome.map(nome => ({ nome })));
+//         } else if (trabalhador.nome && trabalhador.nome.trim() !== '') {
+//           trabalhadoresCorrigidos.push(trabalhador);
+//         }
+//       });
+//       const trabalhadores = trabalhadoresCorrigidos;
+//       const novoServico = new Servico({ ...servicoData, proprietario: req.session.userId, produtos, trabalhadores });
+//       await novoServico.save();
+//     }
+//     res.redirect('/servicos');
+//   } catch (error) {
+//     res.redirect('/adicionar-servico?error=true');
+//   }
+// });
 
 router.post('/adicionar-servico', authController.isAuthenticated, async (req, res, next) => {
   const { servicos } = req.body;
-  if (!Array.isArray(servicos) || servicos.length === 0) {
-    return res.redirect('/adicionar-servico');
-  }
+  
   try {
-    for (const servicoData of servicos) {
-      const produtos = (servicoData.produtos || []).filter(p => p && p.nome && p.nome.trim() !== '');
-      let trabalhadoresCorrigidos = [];
-      (servicoData.trabalhadores || []).forEach(trabalhador => {
-        if (!trabalhador) return;
-        if (Array.isArray(trabalhador.nome)) {
-          trabalhadoresCorrigidos.push(...trabalhador.nome.map(nome => ({ nome })));
-        } else if (trabalhador.nome && trabalhador.nome.trim() !== '') {
-          trabalhadoresCorrigidos.push(trabalhador);
-        }
+    // Obter o mapeamento de ID para nome dos talhões
+    const user = await Usuario.findById(req.session.userId);
+    const response = await axios.get(`http://web:8000/coordenador/api/produtor/${user.username}/`);
+    
+    const talhoesMap = {};
+    response.data.terrenos.forEach(terreno => {
+      terreno.talhoes.forEach(t => {
+        talhoesMap[t.id] = t.nome; // { "2": "Talhão 2" }
       });
-      const trabalhadores = trabalhadoresCorrigidos;
-      const novoServico = new Servico({ ...servicoData, proprietario: req.session.userId, produtos, trabalhadores });
+    });
+
+    // Processar cada serviço
+    for (const servicoData of servicos) {
+      // Converter ID do talhão para nome
+      if (servicoData.talhao && talhoesMap[servicoData.talhao]) {
+        servicoData.talhao = talhoesMap[servicoData.talhao]; // Substitui o ID pelo nome
+      }
+
+      const produtos = (servicoData.produtos || []).filter(p => p.nome?.trim());
+      const trabalhadores = (servicoData.trabalhadores || []).filter(t => t.nome?.trim());
+
+      const novoServico = new Servico({
+        ...servicoData,
+        proprietario: req.session.userId,
+        produtos,
+        trabalhadores
+      });
+
       await novoServico.save();
     }
+
     res.redirect('/servicos');
   } catch (error) {
+    console.error('Erro ao salvar serviço:', error);
     res.redirect('/adicionar-servico?error=true');
   }
 });
