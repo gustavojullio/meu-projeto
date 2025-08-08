@@ -4,36 +4,26 @@
 {% block title %}LOGIN{% endblock %}
 {% block content %}
 
-<div class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-md-6 col-lg-5">
-      <div class="card shadow-sm border-0">
-        <div class="card-body p-4">
-          <div class="text-center mb-4">
-            <h2 class="form-title mt-3">Conta</h2>
-          </div>
+<div class="login-container">
+    <h2 class="form-title">Conta</h2>
 
-          {% if error %}
-            <div class="alert alert-danger text-center" role="alert">
-              {{ error }}
-            </div>
-          {% endif %}
-
-          <form method="post" class="login-form">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary w-100 mt-3">Login</button>
-          </form>
-
-          {% if form.errors %}
-            <div class="alert alert-warning mt-3" role="alert">
-              Usuário ou senha incorretos.
-            </div>
-          {% endif %}
+    {% if error %}
+        <div class="alert alert-danger text-center" role="alert">
+            {{ error }}
         </div>
-      </div>
-    </div>
-  </div>
+    {% endif %}
+
+    <form method="post" class="login-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary w-100">Login</button>
+    </form>
+
+    {% if form.errors %}
+        <div class="alert alert-warning mt-3" role="alert">
+            Usuário ou senha incorretos.
+        </div>
+    {% endif %}
 </div>
 
 {% endblock %}

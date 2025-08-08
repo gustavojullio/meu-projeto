@@ -355,7 +355,6 @@ body.welcome-page .app-header .icon-button {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
     text-align: center;
     background-color: var(--cor-verde-claro-bg);
     padding: 20px;
