@@ -5,43 +5,63 @@
 {% bootstrap_javascript %}
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- O título da página será definido em cada template que herdar deste -->
-    <title>{% block title %}EMATER{% endblock %}</title>
-    
-    <!-- Links para fontes e CSS -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    
-    <!-- Carrega o arquivo CSS estático -->
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- O título da página será definido em cada template que herdar deste -->
+  <title>{% block title %}EMATER{% endblock %}</title>
+
+  <!-- Links para fontes e CSS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+  <!-- Carrega o arquivo CSS estático personalizado (deve ser o último para sobrescrever) -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
+
 <body>
-    <!-- Cabeçalho padrão para todas as páginas -->
-    <header class="app-header">
-        <a class="icon-button" href="javascript:history.back()">
-        </a>
-        <img class="header-logo" src="{% static 'assets/logo-emater.png' %}" alt="Logo EMATER">
-        <div style="width: 40px;"></div> <!-- Elemento para manter o alinhamento -->
-    </header>
+<header class="app-header d-flex align-items-center justify-content-between" style="position: relative;">
+  <!-- Botão de voltar à esquerda -->
+  <div class="d-flex align-items-center">
+    <a class="icon-button me-3" href="javascript:history.back()">
+      <span class="material-symbols-outlined">arrow_back</span>
+    </a>
+  </div>
 
-    <!-- Container principal onde o conteúdo das outras páginas será inserido -->
-    <main class="container with-header">
-        {% block content %}
-        <!-- O conteúdo específico de cada página virá aqui -->
-        {% endblock %}
-    </main>
+  <!-- Logo centralizada -->
+  <div class="position-absolute start-50 translate-middle-x">
+    <img class="header-logo" src="{% static 'assets/logo-emater.png' %}" alt="Logo EMATER" style="height: 40px;">
+  </div>
 
-    <!-- Você pode adicionar um rodapé ou scripts globais aqui se necessário -->
+  <!-- Botão de logout à direita -->
+  {% if request.user.is_authenticated %}
+  <form method="post" action="{% url 'logout' %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-outline-secondary d-flex align-items-center gap-1">
+      Sair <i class="bi bi-person-circle"></i>
+    </button>
+  </form>
+  {% endif %}
+</header>
+
+
+  <!-- Container principal onde o conteúdo das outras páginas será inserido -->
+  <main class="container with-header">
+    {% block content %}
+    <!-- O conteúdo específico de cada página virá aqui -->
+    {% endblock %}
+  </main>
+
+  <!-- Você pode adicionar um rodapé ou scripts globais aqui se necessário -->
+  <!-- O rodapé da versão mobile será ocultado via CSS para desktop -->
+  <footer class="bottom-nav">
+    <!-- Conteúdo do rodapé (se houver, será ocultado pelo CSS em desktop) -->
+  </footer>
 </body>
-
-<footer class="bottom-nav">
-
-</footer>
 
 </html>

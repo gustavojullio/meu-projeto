@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-
 {% load static %}
 
 {% block title %}Editar Terreno - EMATER{% endblock %}
@@ -8,7 +7,7 @@
 <div class="container my-3 px-2">
     <div class="card border-0 shadow-sm">
         <div class="card-header bg-success text-white text-center">
-            <h4 class="mb-0">✏️ Editar Terreno - {{ produtor.user.first_name }}</h4>
+            <h4 class="mb-0">✏️ Editar Terreno - {{ terreno.nome }}</h4>
         </div>
 
         <div class="card-body">
@@ -43,18 +42,13 @@
                     </div>
                 </div>
                 {% endif %}
-                <div class="col-12 text-center text-md-end">
+                <div class="col-12 text-center text-md-end mt-4">
                     <button type="submit" class="btn btn-success w-100 w-md-auto">✅ Atualizar</button>
-                </div>
-                <div class="col-12 text-center text-md-end">
-                    <p><a href="{% url 'coordenador:terreno_detalhe' terreno.id %}"
-                            class="btn btn-secondary w-100 w-md-auto">Voltar</a></p>
                 </div>
             </form>
         </div>
     </div>
 </div>
-
 
 <script src="{% static 'js/combo_ibge.js' %}"></script>
 {% endblock %}

@@ -1,0 +1,507 @@
+/* -------------------
+ * Reset e Variáveis Globais
+ * ------------------- */
+
+/* Definindo as cores do seu guia de marca para fácil acesso */
+:root {
+    --cor-verde-claro-bg: #f0f4f0;
+    /* Um verde bem claro para o fundo */
+    --cor-verde-escuro-emater: #384d1a;
+    /* Verde escuro do logo */
+    --cor-texto-principal: #333;
+    --cor-branca: #ffffff;
+    --cor-cinza-claro: #f8f9fa; /* Para fundos de cards e seções */
+    --cor-borda-claro: #e9ecef; /* Para bordas de cards e elementos */
+    --cor-azul-primario: #0d6efd; /* Cor padrão do Bootstrap para botões/links primários */
+}
+
+/* Reset básico para garantir consistência entre navegadores */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--cor-verde-claro-bg);
+    color: var(--cor-texto-principal);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* -------------------
+ * Estilos do Header (Cabeçalho)
+ * ------------------- */
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: var(--cor-branca);
+    border-bottom: 1px solid #eee;
+    position: sticky; /* Fixo no topo ao rolar */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Sombra sutil */
+}
+
+.header-logo {
+    height: 40px; /* Ajuste conforme a imagem do logo */
+}
+
+.icon-button {
+    font-size: 28px;
+    color: var(--cor-texto-principal);
+    cursor: pointer;
+    text-decoration: none;
+    display: flex; /* Para alinhar o ícone */
+    align-items: center;
+    justify-content: center;
+    width: 40px; /* Tamanho fixo para o botão de ícone */
+    height: 40px;
+    border-radius: 50%; /* Torna-o redondo */
+    transition: background-color 0.2s ease;
+}
+
+.icon-button:hover {
+    background-color: rgba(0,0,0,0.05);
+}
+
+.icon-button .material-symbols-outlined {
+    vertical-align: middle;
+    font-size: 24px; /* Tamanho do ícone */
+}
+
+/* -------------------
+ * Estilos do Container Principal e Layout
+ * ------------------- */
+.container {
+    width: 100%;
+    max-width: 1200px; /* Largura máxima para desktop */
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.container.with-header {
+    padding-top: 80px; /* Espaço para o cabeçalho fixo */
+}
+
+/* -------------------
+ * Estilos de Componentes Bootstrap Personalizados
+ * ------------------- */
+
+/* Cards */
+.card {
+    border-radius: 12px;
+    border: 1px solid var(--cor-borda-claro);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Sombra suave */
+}
+
+.card-header {
+    border-radius: 12px 12px 0 0 !important; /* Cantos arredondados no topo */
+    padding: 15px 20px;
+    font-weight: 500;
+}
+
+/* Botões */
+.btn {
+    display: inline-flex; /* Para alinhar ícones e texto */
+    align-items: center;
+    justify-content: center;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    gap: 8px; /* Espaço entre ícone e texto */
+}
+
+.btn-primary, .btn-success {
+    background-color: var(--cor-verde-escuro-emater) !important;
+    border-color: var(--cor-verde-escuro-emater) !important;
+    color: var(--cor-branca) !important;
+}
+
+.btn-primary:hover, .btn-success:hover {
+    background-color: #4a6822 !important; /* Um tom mais claro do verde */
+    border-color: #4a6822 !important;
+    transform: translateY(-1px); /* Efeito de leve elevação */
+}
+
+.btn-secondary {
+    background-color: #6c757d !important; /* Cinza do Bootstrap */
+    border-color: #6c757d !important;
+    color: var(--cor-branca) !important;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268 !important;
+    border-color: #5a6268 !important;
+    transform: translateY(-1px);
+}
+
+.btn-danger {
+    background-color: #dc3545 !important; /* Vermelho do Bootstrap */
+    border-color: #dc3545 !important;
+    color: var(--cor-branca) !important;
+}
+
+.btn-danger:hover {
+    background-color: #c82333 !important;
+    border-color: #bd2130 !important;
+    transform: translateY(-1px);
+}
+
+.btn-outline-primary {
+    color: var(--cor-verde-escuro-emater) !important;
+    border-color: var(--cor-verde-escuro-emater) !important;
+    background-color: transparent !important;
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--cor-verde-escuro-emater) !important;
+    color: var(--cor-branca) !important;
+}
+
+.btn-outline-success {
+    color: var(--cor-verde-escuro-emater) !important;
+    border-color: var(--cor-verde-escuro-emater) !important;
+    background-color: transparent !important;
+}
+
+.btn-outline-success:hover {
+    background-color: var(--cor-verde-escuro-emater) !important;
+    color: var(--cor-branca) !important;
+}
+
+.btn-outline-info {
+    color: var(--cor-azul-primario) !important; /* Mantendo o azul para info */
+    border-color: var(--cor-azul-primario) !important;
+    background-color: transparent !important;
+}
+
+.btn-outline-info:hover {
+    background-color: var(--cor-azul-primario) !important;
+    color: var(--cor-branca) !important;
+}
+
+/* Formulários e Inputs */
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    padding: 10px 15px;
+    font-size: 1rem;
+    color: var(--cor-texto-principal);
+    background-color: var(--cor-branca);
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--cor-verde-escuro-emater);
+    box-shadow: 0 0 0 0.25rem rgba(56, 77, 26, 0.25);
+}
+
+.form-label {
+    font-weight: 500;
+    color: var(--cor-texto-principal);
+    margin-bottom: 5px;
+}
+
+/* Tabelas */
+.table {
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 8px;
+    overflow: hidden; /* Garante que os cantos arredondados sejam aplicados */
+}
+
+.table-responsive {
+    border-radius: 8px;
+    overflow: auto; /* Permite rolagem em telas menores */
+}
+
+.table thead th {
+    background-color: var(--cor-verde-escuro-emater);
+    color: var(--cor-branca);
+    font-weight: 500;
+    vertical-align: middle;
+    padding: 12px 15px;
+}
+
+.table tbody td {
+    background-color: var(--cor-branca);
+    vertical-align: middle;
+    padding: 12px 15px;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: var(--cor-verde-claro-bg); /* Fundo listrado */
+}
+
+.table-bordered th, .table-bordered td {
+    border: 1px solid var(--cor-borda-claro);
+}
+
+/* Badges */
+.badge {
+    border-radius: 10px;
+    padding: 0.4em 0.8em;
+    font-weight: 500;
+    font-size: 0.85em;
+    display: inline-block; /* Para que o padding funcione bem */
+    margin: 2px; /* Espaçamento entre badges */
+}
+
+.badge.bg-secondary {
+    background-color: #6c757d !important;
+    color: var(--cor-branca) !important;
+}
+
+.badge.bg-info {
+    background-color: #0dcaf0 !important; /* Azul claro do Bootstrap */
+    color: #212529 !important; /* Texto escuro para contraste */
+}
+
+.badge.bg-success {
+    background-color: var(--cor-verde-escuro-emater) !important;
+    color: var(--cor-branca) !important;
+}
+
+/* Alertas */
+.alert {
+    border-radius: 8px;
+    padding: 15px 20px;
+    font-size: 1rem;
+}
+
+/* Accordion */
+.accordion-item {
+    border: 1px solid var(--cor-borda-claro);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.accordion-header {
+    background-color: var(--cor-branca);
+}
+
+.accordion-button {
+    background-color: var(--cor-branca) !important;
+    color: var(--cor-texto-principal) !important;
+    font-weight: 500;
+    padding: 15px 20px;
+    border-radius: 8px !important; /* Garante que os cantos arredondados sejam aplicados */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: var(--cor-verde-escuro-emater) !important;
+    color: var(--cor-branca) !important;
+}
+
+.accordion-button:not(.collapsed)::after {
+    filter: brightness(0) invert(1); /* Inverte a cor da seta para branco */
+}
+
+.accordion-button:focus {
+    box-shadow: 0 0 0 0.25rem rgba(56, 77, 26, 0.25);
+    border-color: var(--cor-verde-escuro-emater);
+}
+
+.accordion-body {
+    padding: 20px;
+    background-color: var(--cor-cinza-claro);
+    border-top: 1px solid var(--cor-borda-claro);
+}
+
+/* -------------------
+ * Estilos Específicos das Páginas
+ * ------------------- */
+
+/* Welcome Page */
+.welcome-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Ocupa a altura total da tela */
+    text-align: center;
+    background-color: var(--cor-verde-claro-bg);
+    padding: 20px;
+}
+
+.welcome-logo-icon {
+    max-width: 150px; /* Tamanho do ícone menor */
+    margin-bottom: 20px;
+}
+
+.welcome-logo {
+    max-width: 300px; /* Tamanho do logo principal */
+    width: 100%;
+    margin-bottom: 60px; /* Espaço entre o logo e o botão */
+}
+
+/* Oculta o botão de voltar na tela de welcome */
+body.welcome-page .app-header .icon-button {
+    display: none;
+}
+
+
+/* Login Page */
+.login-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    text-align: center;
+    background-color: var(--cor-verde-claro-bg);
+    padding: 20px;
+}
+
+.login-form {
+    width: 50%; /* Example width */
+      margin-left: auto;
+      margin-right: auto;
+    max-width: 400px; /* Limita a largura do formulário */
+    padding: 30px; /* Aumenta o padding interno do card */
+    background-color: var(--cor-branca);
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.login-form .form-control,
+.login-form .btn {
+    margin-bottom: 15px;
+}
+
+.login-form .form-title {
+    font-size: 28px; /* Título maior */
+    font-weight: 700;
+    color: var(--cor-texto-principal);
+    margin-bottom: 30px; /* Mais espaço abaixo do título */
+}
+
+.login-form .login-logo-card { /* Novo estilo para o logo dentro do card de login */
+    max-width: 200px; /* Tamanho do logo dentro do card */
+    margin-bottom: 25px;
+}
+
+.forgot-password-link {
+    display: block; /* Garante que o link ocupe a linha toda */
+    margin-top: 20px;
+    color: var(--cor-texto-principal);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s ease;
+}
+
+.forgot-password-link:hover {
+    color: var(--cor-verde-escuro-emater);
+    text-decoration: underline;
+}
+
+
+/* Formulários de Adicionar/Editar (Produtor, Talhão, Terreno) */
+.card-body .row.g-3 {
+    padding: 10px; /* Espaçamento interno para os campos */
+}
+
+.card-body .col-12, .card-body .col-md-6 {
+    margin-bottom: 15px; /* Espaçamento entre os campos */
+}
+
+.card-body .form-text.text-danger {
+    font-size: 0.875rem;
+    margin-top: 5px;
+}
+
+/* Botões de ação no final dos formulários */
+.col-12.text-center.text-md-end {
+    margin-top: 20px;
+}
+
+.col-12.text-center.text-md-end .btn {
+    width: auto; /* Deixa o botão se ajustar ao conteúdo */
+    min-width: 120px; /* Garante um tamanho mínimo */
+}
+
+/* Ajuste para o link "Voltar" nos formulários */
+.col-12.text-center.text-md-end p {
+    margin-top: 15px;
+}
+
+/* Página de Detalhes do Produtor/Talhão/Terreno */
+.form-control.bg-light {
+    background-color: var(--cor-cinza-claro) !important;
+    font-weight: 500;
+}
+
+.list-group-item {
+    border-radius: 8px;
+    margin-bottom: 5px;
+    border: 1px solid var(--cor-borda-claro);
+}
+
+.list-group-item a {
+    color: var(--cor-verde-escuro-emater);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.list-group-item a:hover {
+    text-decoration: underline;
+}
+
+/* Estilos para a página de serviços importados (listarServicos.html, servicos-por-produtor.html) */
+.container.mt-4 h2 {
+    color: var(--cor-texto-principal);
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
+.card-text strong {
+    color: var(--cor-texto-principal);
+}
+
+.card-text ul {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 5px;
+}
+
+.card-text ul li {
+    margin-bottom: 3px;
+    font-size: 0.95rem;
+}
+
+/* Ajuste para o rodapé vazio */
+footer.bottom-nav {
+    display: none; /* Oculta o rodapé da versão mobile no desktop */
+}
+
+/* Mensagens de alerta do Django */
+.alert-info {
+    background-color: #e0f7fa; /* Um azul bem claro */
+    border-color: #b2ebf2;
+    color: #006064;
+}
+
+.alert-warning {
+    background-color: #fff3e0; /* Laranja bem claro */
+    border-color: #ffe0b2;
+    color: #e65100;
+}
+
+.alert-danger {
+    background-color: #ffebee; /* Vermelho bem claro */
+    border-color: #ffcdd2;
+    color: #b71c1c;
+}
+
+.alert-dismissible .btn-close {
+    font-size: 0.9rem;
+}

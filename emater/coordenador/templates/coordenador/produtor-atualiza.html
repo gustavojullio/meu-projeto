@@ -58,18 +58,13 @@
           </div>
         {% endif %}
 
-        <div class="col-12 text-center text-md-end">
+        <div class="col-12 text-center text-md-end mt-4">
           <button type="submit" class="btn btn-success w-100 w-md-auto">✅ Atualizar</button>
-        </div>
-        <div class="col-12 text-center text-md-end">
-          <p><a href="{% url 'coordenador:produtor_detalhe' produtor.id %}" class="btn btn-secondary w-100 w-md-auto">Voltar</a></p>
         </div>
       </form>
     </div>
   </div>
 </div>
-
-
 
 <script src="{% static 'js/combo_ibge.js' %}"></script>
 {% endblock %}

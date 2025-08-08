@@ -3,7 +3,7 @@ from django.http import HttpResponseForbidden, HttpResponse, JsonResponse
 from .forms import ProdutorForm, TerrenoForm, TalhaoForm, UserForm
 from django.contrib.auth.decorators import login_required
 from .models import Coordenador, Produtor, Terreno, Talhao
-from sistema.utils import is_coordenador_or_superuser
+from sistema.utils import is_coordenador_or_superuser, coordenador_required
 from django.contrib import messages
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment, Border, Side
@@ -16,6 +16,24 @@ from datetime import datetime
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 
+
+# @api_view(['POST'])
+# def api_autenticar_produtor(request):
+#     email = request.data.get('email')
+#     password = request.data.get('password')
+
+#     if not email or not password:
+#         return JsonResponse({'erro': 'E-mail e senha são obrigatórios.'}, status=status.HTTP_400_BAD_REQUEST)
+
+#     # Use o e-mail como `username` na função authenticate.
+#     authenticated_user = authenticate(username=email, password=password)
+
+#     if authenticated_user is not None:
+#         # A autenticação já está validada, você não precisa fazer mais nada aqui.
+#         return JsonResponse({'autenticado': True, 'email': authenticated_user.email, 'nome': authenticated_user.first_name}, status=status.HTTP_200_OK)
+#     else:
+#         return JsonResponse({'autenticado': False, 'mensagem': 'Credenciais inválidas.'}, status=status.HTTP_401_UNAUTHORIZED)
+    
 @api_view(['POST'])
 def api_autenticar_produtor(request):
     email = request.data.get('email')
@@ -45,7 +63,6 @@ def listaProd(request):
 
     return render(request,"coordenador/listaProdutores.html",contexto)
 
-
 @login_required
 def criarProdutor(request): 
     if request.method == "POST":
@@ -53,6 +70,7 @@ def criarProdutor(request):
         user_form = UserForm(request.POST)
         if form.is_valid() and user_form.is_valid():            
             user = user_form.save(commit=False)
+            user.username = user.email
             user.set_password(user.password)
             user.save()
             produtor = form.save(commit=False)
@@ -70,16 +88,14 @@ def criarProdutor(request):
     return render(request, 'coordenador/adicionarProdutor.html', {'form': form, 'user_form': user_form})
 
 @login_required
+@coordenador_required(Produtor, produtor_attr=None)
 def produtor_atualiza(request, id):
     produtor = get_object_or_404(Produtor, id=id)
     user = produtor.user
 
-    if not is_coordenador_or_superuser(request.user, produtor):
-        return HttpResponseForbidden("Apenas coordenadores podem acessar esse link.")
-
     if request.method == "POST":
         form = ProdutorForm(request.POST, instance=produtor)
-        user_form = UserForm(request.POST, instance=produtor)
+        user_form = UserForm(request.POST, instance=user)
         if form.is_valid() and user_form.is_valid():
             produtor_atualizado = form.save(commit=False)
             usuario_atualizado = user_form.save(commit=False)
@@ -93,7 +109,7 @@ def produtor_atualiza(request, id):
             usuario_atualizado.save()
             produtor_atualizado.save()
             messages.success(request, "Produtor salvo!")
-            return redirect('coordenador:Lista_Produtores')
+            return redirect('coordenador:produtor_detalhe', id=id)
         else:
             messages.error(request, "Erro ao salvar. Verifique os campos!")
     else:
@@ -107,11 +123,9 @@ def produtor_atualiza(request, id):
 
 
 @login_required
+@coordenador_required(Produtor, produtor_attr='produtor')
 def produtor_exclui(request, id):
     produtor = get_object_or_404(Produtor, id=id)
-
-    if not is_coordenador_or_superuser(request.user, produtor):
-        return HttpResponseForbidden("Você não tem autorização para acessar essa página.")
 
     if request.method == "GET":
         produtor.delete()
@@ -119,11 +133,12 @@ def produtor_exclui(request, id):
         return redirect('coordenador:Lista_Produtores')
     
 @login_required
-def produtor_detalhe(request, id):
+@coordenador_required(Produtor, produtor_attr='produtor')
+def produtor_exclui(request, id):
     produtor = get_object_or_404(Produtor, id=id)
 
-    if not is_coordenador_or_superuser(request.user, produtor):
-        return HttpResponseForbidden("Você não tem autorização para acessar essa página.")
+def produtor_detalhe(request, id):
+    produtor = get_object_or_404(Produtor, id=id)
     
     terrenos = Terreno.objects.filter(produtor=produtor).order_by('nome')
 
@@ -133,11 +148,12 @@ def produtor_detalhe(request, id):
     })
 
 @login_required
-def terreno_cria(request, id):
+@coordenador_required(Produtor, produtor_attr='produtor')
+def produtor_exclui(request, id):
     produtor = get_object_or_404(Produtor, id=id)
 
-    if not is_coordenador_or_superuser(request.user, produtor):
-        return HttpResponseForbidden("Você não tem autorização para acessar essa página.")
+def terreno_cria(request, id):
+    produtor = get_object_or_404(Produtor, id=id)
 
     if request.method == "POST":
         print("Entrou no POST")
@@ -156,23 +172,22 @@ def terreno_cria(request, id):
     return render(request, 'coordenador/terreno-cria.html', {'form': form, 'produtor': produtor})
 
 @login_required
+@coordenador_required(Terreno, produtor_attr='produtor')
+def produtor_exclui(request, id):
+    produtor = get_object_or_404(Produtor, id=id)
+
 def terreno_detalhe(request, id):
     terreno = get_object_or_404(Terreno, id=id)
-    
-    if not is_coordenador_or_superuser(request.user, terreno.produtor):
-        return HttpResponseForbidden("Você não tem autorização para acessar essa página.")
-
+  
     talhoes = Talhao.objects.filter(terreno=terreno).order_by('nome')
 
     return render(request, 'coordenador/terreno-detalhe.html', {'terreno':terreno, 'talhoes':talhoes})
 
 @login_required
+@coordenador_required(Terreno, produtor_attr='produtor')
 def terreno_atualiza(request, id):
     terreno = get_object_or_404(Terreno, id=id)
 
-    if not is_coordenador_or_superuser(request.user, terreno.produtor):
-        return HttpResponseForbidden("Você não tem autorização para acessar essa página.")
-    
     if request.method == "POST":
         form = TerrenoForm(request.POST, instance=terreno)
         if form.is_valid():
@@ -192,11 +207,9 @@ def terreno_atualiza(request, id):
     })
 
 @login_required
+@coordenador_required(Terreno, produtor_attr='produtor')
 def terreno_exclui(request, id):
     terreno = get_object_or_404(Terreno, id=id)
-
-    if not is_coordenador_or_superuser(request.user, terreno.produtor):
-        return HttpResponseForbidden("Você não tem autorização para acessar essa página.")
 
     if request.method == "GET":
         terreno.delete()
@@ -204,11 +217,9 @@ def terreno_exclui(request, id):
         return redirect('coordenador:produtor_detalhe', id=terreno.produtor.id)
     
 @login_required
+@coordenador_required(Terreno, produtor_attr='produtor')
 def talhao_cria(request, id):
     terreno = get_object_or_404(Terreno, id=id)
-
-    if not is_coordenador_or_superuser(request.user, terreno.produtor):
-        return HttpResponseForbidden("Você não tem autorização para acessar essa página.")
 
     if request.method == "POST":
         print("Entrou no POST")
@@ -219,7 +230,7 @@ def talhao_cria(request, id):
             talhao.terreno = terreno
             talhao.cidade = request.POST.get('cidade')
             talhao.save()
-            messages.success(request, "Terreno criado com sucesso!")
+            messages.success(request, "Talhão criado com sucesso!")
             return redirect('coordenador:terreno_detalhe', id=terreno.id)
     else:
         form = TalhaoForm()
@@ -227,20 +238,16 @@ def talhao_cria(request, id):
     return render(request, 'coordenador/talhao-cria.html', {'form': form, 'terreno': terreno})
 
 @login_required
+@coordenador_required(Talhao, produtor_attr='terreno.produtor')
 def talhao_detalhe(request, id):
     talhao = get_object_or_404(Talhao, id=id)
-    
-    if not is_coordenador_or_superuser(request.user, talhao.terreno.produtor):
-        return HttpResponseForbidden("Você não tem autorização para acessar essa página.")
-
+  
     return render(request, 'coordenador/talhao-detalhe.html', {'talhao':talhao})
 
 @login_required
+@coordenador_required(Talhao, produtor_attr='terreno.produtor')
 def talhao_atualiza(request, id):
     talhao = get_object_or_404(Talhao, id=id)
-
-    if not is_coordenador_or_superuser(request.user, talhao.terreno.produtor):
-        return HttpResponseForbidden("Você não tem autorização para acessar essa página.")
     
     if request.method == "POST":
         form = TalhaoForm(request.POST, instance=talhao)
@@ -261,15 +268,13 @@ def talhao_atualiza(request, id):
     })
 
 @login_required
+@coordenador_required(Talhao, produtor_attr='terreno.produtor')
 def talhao_exclui(request, id):
     talhao = get_object_or_404(Talhao, id=id)
 
-    if not is_coordenador_or_superuser(request.user, talhao.terreno.produtor):
-        return HttpResponseForbidden("Você não tem autorização para acessar essa página.")
-
     if request.method == "GET":
         talhao.delete()
-        messages.success(request, "Terreno excluído!")
+        messages.success(request, "Talhão excluído!")
         return redirect('coordenador:terreno_detalhe', id=talhao.terreno.produtor.id)
     
 def excelGera(request):
@@ -379,7 +384,12 @@ def exportar_servicos_excel(request):
 def exportar_excel_coordenador(request):
     # Garante que o usuário é coordenador ou superuser
     if not hasattr(request.user, 'coordenador') and not request.user.is_superuser:
-        return HttpResponse("Acesso não autorizado", status=403)
+        response = render(request, '403.html', {
+            'message': 'Você não tem permissão para acessar essa página.',
+            'user': request.user
+        })
+        response.status_code = 403
+        return response
     
     coordenador = request.user.coordenador
 
@@ -464,7 +474,7 @@ def exportar_excel_coordenador(request):
 
 @api_view(['GET'])
 def api_enviar_produtor(request, email):
-    chave = request.headers.get('X-API-Key')
+    # chave = request.headers.get('X-API-Key')
     
     # if chave != 'segredo123':
     #    return Response({'erro': 'Acesso não autorizado!'}, status=status.HTTP_401_UNAUTHORIZED)
