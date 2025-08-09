@@ -16,7 +16,9 @@ html(lang="pt-BR")
     header.app-header
       span.material-symbols-outlined.icon-button menu
       img.header-logo(src="assets/logo_barra.png", alt="Logo EMATER")
-      div(style="width: 30px;")
+      //div(style="width: 30px;")
+      a.icon-button(href="/logout", title="Sair")
+        span.material-symbols-outlined logout
 
     main.container.with-header-and-footer
       button.filter-toggle#filter-toggle

@@ -74,6 +74,17 @@ router.post('/registrar', async (req, res) => {
   }
 });
 
+router.get('/logout', (req, res, next) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error("Erro ao fazer logout:", err);
+      return next(err);
+    }
+    // Redireciona para a página de login após o logout
+    res.redirect('/login');
+  });
+});
+
 // --- ROTAS PROTEGIDAS ---
 router.get('/servicos', authController.isAuthenticated, async (req, res, next) => {
   try {
@@ -94,32 +105,6 @@ router.get('/adicionar-servico', authController.isAuthenticated, async (req, res
   }
 });
 
-// router.post('/adicionar-servico', authController.isAuthenticated, async (req, res, next) => {
-//   const { servicos } = req.body;
-//   if (!Array.isArray(servicos) || servicos.length === 0) {
-//     return res.redirect('/adicionar-servico');
-//   }
-//   try {
-//     for (const servicoData of servicos) {
-//       const produtos = (servicoData.produtos || []).filter(p => p && p.nome && p.nome.trim() !== '');
-//       let trabalhadoresCorrigidos = [];
-//       (servicoData.trabalhadores || []).forEach(trabalhador => {
-//         if (!trabalhador) return;
-//         if (Array.isArray(trabalhador.nome)) {
-//           trabalhadoresCorrigidos.push(...trabalhador.nome.map(nome => ({ nome })));
-//         } else if (trabalhador.nome && trabalhador.nome.trim() !== '') {
-//           trabalhadoresCorrigidos.push(trabalhador);
-//         }
-//       });
-//       const trabalhadores = trabalhadoresCorrigidos;
-//       const novoServico = new Servico({ ...servicoData, proprietario: req.session.userId, produtos, trabalhadores });
-//       await novoServico.save();
-//     }
-//     res.redirect('/servicos');
-//   } catch (error) {
-//     res.redirect('/adicionar-servico?error=true');
-//   }
-// });
 
 router.post('/adicionar-servico', authController.isAuthenticated, async (req, res, next) => {
   const { servicos } = req.body;
@@ -142,9 +127,21 @@ router.post('/adicionar-servico', authController.isAuthenticated, async (req, re
       if (servicoData.talhao && talhoesMap[servicoData.talhao]) {
         servicoData.talhao = talhoesMap[servicoData.talhao]; // Substitui o ID pelo nome
       }
-
+      
       const produtos = (servicoData.produtos || []).filter(p => p.nome?.trim());
-      const trabalhadores = (servicoData.trabalhadores || []).filter(t => t.nome?.trim());
+      let trabalhadoresCorrigidos = [];
+
+      (servicoData.trabalhadores || []).forEach(trabalhador => {
+        if (!trabalhador) return;
+        if (Array.isArray(trabalhador.nome)) {
+          trabalhadoresCorrigidos.push(...trabalhador.nome.map(nome => ({ nome })));
+        } else if (trabalhador.nome && trabalhador.nome.trim() !== '') {
+          trabalhadoresCorrigidos.push(trabalhador);
+        }
+      });
+
+
+      const trabalhadores = trabalhadoresCorrigidos;
 
       const novoServico = new Servico({
         ...servicoData,
